@@ -56,6 +56,7 @@ void() monster_use =
 	
 	// delay reaction so if the monster is teleported, its sound is still heard
 	self.enemy = activator;
+	bprint("setting enemy monster_use\n");
 	self.nextthink = time + 0.1;
 	self.think = FoundTarget;
 };
@@ -142,6 +143,45 @@ void() walkmonster_start_go =
 };
 
 
+
+void (  ) turret_monster_think =
+{
+	self.origin_z = self.origin_z + 1;	// raise off floor a bit
+	droptofloor();
+	//dprint ("turret_monster_think");
+	//if (!walkmove(0,0))
+	//{
+	//	dprint ("walkmonster in wall at: ");
+	//	dprint (vtos(tower.origin));
+	//	dprint ("\n");
+	//}
+	
+	self.takedamage = DAMAGE_AIM;
+
+	self.ideal_yaw = self.angles * '0 1 0';
+
+	if (!self.yaw_speed)
+		self.yaw_speed = 20;
+
+	self.view_ofs = '0 0 25';
+	self.use = monster_use;
+	self.team = TEAM_MONSTERS;
+	self.flags = self.flags | FL_MONSTER;
+	
+	self.pausetime = 99999999;
+	self.th_stand ();
+	
+	// spread think times so they don't all happen at same time
+	//self.nextthink = self.nextthink + random()*0.5;
+};
+
+void ( entity tower ) turret_monster_init =
+{
+	//dprint ("turret_monster_init");
+	tower.nextthink = tower.nextthink + random()*0.5;
+	tower.think = turret_monster_think;
+	
+}
 void() walkmonster_start =
 {
 	// delay drop to floor to make sure all doors have been spawned

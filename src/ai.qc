@@ -236,7 +236,15 @@ float(entity targ) infront =
 void() HuntTarget =
 {
 	self.goalentity = self.enemy;
-	self.think = self.th_run;
+	
+	if(self.owner.classname == "player" )
+	{
+		self.think = self.th_missile;
+	}
+	else
+	{
+		self.think = self.th_run;
+	}
 	self.ideal_yaw = vectoyaw(self.enemy.origin - self.origin);
 	self.nextthink = time + 0.1;
 	SUB_AttackFinished (1);	// wait a while before first attack
@@ -352,6 +360,7 @@ float() FindTarget =
 		self.enemy = self.enemy.enemy;
 		if (self.enemy.classname != "player")
 		{
+			bprint("FindTarget setting enemy\n");
 			self.enemy = world;
 			return FALSE;
 		}
@@ -361,6 +370,53 @@ float() FindTarget =
 	return TRUE;
 };
 
+float() FindTowerTarget =
+{
+	local float	r;
+	local	entity	head;
+
+	head = findradius(self.origin, 999999999);
+	//bprint("firetowertarg\n");
+	
+	if( !visible(self.enemy) )
+	{
+		while (head)
+		{
+			if ( (head.team == TEAM_MONSTERS) || (head.classname == "player") || (head.flags & FL_MONSTER) )
+			{
+				
+				if ( (self.owner != head.owner) && (self.owner != head) && (head.solid != SOLID_NOT))
+				{
+					
+					if ( //(head != self.enemy) && 
+					     (head.health > 0) &&
+					    !(head.flags & FL_NOTARGET) && 
+					    !(head.items & IT_INVISIBILITY) )
+					{
+						
+						r = range (head);
+						if ( (r != RANGE_FAR) && ( visible (head) ) ) //&&  ( infront (head) )
+						{
+							draw_line(head.origin, self.origin, 254, 5, TRUE);
+							//
+							//
+							// got one
+							//
+							self.enemy = head;	
+							bprint("setting enemy to ");
+							bprint(head.classname);
+							bprint("\n");			
+							FoundTarget ();
+							return TRUE;						
+						}	
+					}
+				}
+			}
+			head = head.chain;
+		}
+	}
+	return FALSE;
+};
 
 //=============================================================================
 
@@ -435,6 +491,12 @@ void() ai_stand =
 		self.th_walk ();
 		return;
 	}
+};
+
+void() ai_tower_stand =
+{
+	if (FindTowerTarget ())
+		return;
 };
 
 /*

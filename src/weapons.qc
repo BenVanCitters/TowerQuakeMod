@@ -533,11 +533,11 @@ void() W_FireLightning =
 
 
 //=============================================================================
-
+void(vector org, entity tow_owner) monster_tow_enforcer;
 
 void() GrenadeExplode =
 {
-	T_RadiusDamage (self, self.owner, 120, world);
+	//T_RadiusDamage (self, self.owner, 120, world);
 
 	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte (MSG_BROADCAST, TE_EXPLOSION);
@@ -546,6 +546,7 @@ void() GrenadeExplode =
 	WriteCoord (MSG_BROADCAST, self.origin_z);
 
 	BecomeExplosion ();
+	monster_tow_enforcer( self.origin, self.owner );
 };
 
 void() GrenadeTouch =

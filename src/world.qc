@@ -313,6 +313,40 @@ void() worldspawn =
 	precache_model ("progs/v_light.mdl");
 	
 
+	//precaches for towers
+	//soldier/grunt
+	precache_model ("progs/soldier.mdl");
+	precache_model ("progs/h_guard.mdl");
+	precache_model ("progs/gib1.mdl");
+	precache_model ("progs/gib2.mdl");
+	precache_model ("progs/gib3.mdl");
+
+	precache_sound ("soldier/death1.wav");
+	precache_sound ("soldier/idle.wav");
+	precache_sound ("soldier/pain1.wav");
+	precache_sound ("soldier/pain2.wav");
+	precache_sound ("soldier/sattck1.wav");
+	precache_sound ("soldier/sight1.wav");
+
+	precache_sound ("player/udeath.wav");		// gib death
+
+	//enforcer
+	precache_model2 ("progs/enforcer.mdl");
+	precache_model2 ("progs/h_mega.mdl");
+	precache_model2 ("progs/laser.mdl");
+
+	precache_sound2 ("enforcer/death1.wav");
+	precache_sound2 ("enforcer/enfire.wav");
+	precache_sound2 ("enforcer/enfstop.wav");
+	precache_sound2 ("enforcer/idle1.wav");
+	precache_sound2 ("enforcer/pain1.wav");
+	precache_sound2 ("enforcer/pain2.wav");
+	precache_sound2 ("enforcer/sight1.wav");
+	precache_sound2 ("enforcer/sight2.wav");
+	precache_sound2 ("enforcer/sight3.wav");
+	precache_sound2 ("enforcer/sight4.wav");
+
+
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
 //
