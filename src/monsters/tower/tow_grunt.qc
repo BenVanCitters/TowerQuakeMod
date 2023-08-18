@@ -48,7 +48,14 @@ $frame painb11 painb12 painb13 painb14
 $frame painc1 painc2 painc3 painc4 painc5 painc6 painc7 painc8 painc9 painc10
 $frame painc11 painc12 painc13
 
+$frame run1 run2 run3 run4 run5 run6 run7 run8
+
 $frame shoot1 shoot2 shoot3 shoot4 shoot5 shoot6 shoot7 shoot8 shoot9
+
+$frame prowl_1 prowl_2 prowl_3 prowl_4 prowl_5 prowl_6 prowl_7 prowl_8
+$frame prowl_9 prowl_10 prowl_11 prowl_12 prowl_13 prowl_14 prowl_15 prowl_16
+$frame prowl_17 prowl_18 prowl_19 prowl_20 prowl_21 prowl_22 prowl_23 prowl_24
+
 
 /*
 ==============================================================================
@@ -58,14 +65,14 @@ SOLDIER CODE
 
 void() tow_army_fire;
 
-void()	tow_army_stand1	=[	$stand1,	tow_army_stand2	] {ai_tower_stand();};
-void()	tow_army_stand2	=[	$stand2,	tow_army_stand3	] {ai_tower_stand();};
-void()	tow_army_stand3	=[	$stand3,	tow_army_stand4	] {ai_tower_stand();};
-void()	tow_army_stand4	=[	$stand4,	tow_army_stand5	] {ai_tower_stand();};
-void()	tow_army_stand5	=[	$stand5,	tow_army_stand6	] {ai_tower_stand();};
-void()	tow_army_stand6	=[	$stand6,	tow_army_stand7	] {ai_tower_stand();};
-void()	tow_army_stand7	=[	$stand7,	tow_army_stand8	] {ai_tower_stand();};
-void()	tow_army_stand8	=[	$stand8,	tow_army_stand1	] {ai_tower_stand();};
+void()	tow_army_stand1	=[	$stand1,	tow_army_stand2	] {FindTowerTarget();};
+void()	tow_army_stand2	=[	$stand2,	tow_army_stand3	] {FindTowerTarget();};
+void()	tow_army_stand3	=[	$stand3,	tow_army_stand4	] {FindTowerTarget();};
+void()	tow_army_stand4	=[	$stand4,	tow_army_stand5	] {FindTowerTarget();};
+void()	tow_army_stand5	=[	$stand5,	tow_army_stand6	] {FindTowerTarget();};
+void()	tow_army_stand6	=[	$stand6,	tow_army_stand7	] {FindTowerTarget();};
+void()	tow_army_stand7	=[	$stand7,	tow_army_stand8	] {FindTowerTarget();};
+void()	tow_army_stand8	=[	$stand8,	tow_army_stand1	] {FindTowerTarget();};
 
 
 
@@ -250,17 +257,17 @@ void(vector org, entity tow_owner) monster_tow_army =
 	tower.angles_y =0;
 	
 	
-	tower.solid = SOLID_SLIDEBOX;
+	tower.solid = SOLID_SLIDEBOX ;
 	tower.movetype = MOVETYPE_STEP;
 	tower.classname = "monster_army";
 	setmodel (tower, "progs/soldier.mdl");
-	tower.owner = tow_owner;
+	tower.tower_owner = tow_owner;
 	tower.noise = "soldier/sight1.wav";
 	tower.netname = "$qc_grunt";
 	tower.killstring = "$qc_ks_grunt";
 
 	setsize (tower, '-16 -16 -24', '16 16 40');
-	setorigin (tower, org + '0 0 32');
+	setorigin (tower, org + '0 0 50');
 	tower.health = 30;
 	tower.max_health = 30;
 

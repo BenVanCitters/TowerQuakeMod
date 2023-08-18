@@ -133,13 +133,13 @@ void() tow_enforcer_fire =
 
 //============================================================================
 
-void()	tow_enf_stand1	=[	$stand1,	tow_enf_stand2	] {ai_stand();};
-void()	tow_enf_stand2	=[	$stand2,	tow_enf_stand3	] {ai_stand();};
-void()	tow_enf_stand3	=[	$stand3,	tow_enf_stand4	] {ai_stand();};
-void()	tow_enf_stand4	=[	$stand4,	tow_enf_stand5	] {ai_stand();};
-void()	tow_enf_stand5	=[	$stand5,	tow_enf_stand6	] {ai_stand();};
-void()	tow_enf_stand6	=[	$stand6,	tow_enf_stand7	] {ai_stand();};
-void()	tow_enf_stand7	=[	$stand7,	tow_enf_stand1	] {ai_stand();};
+void()	tow_enf_stand1	=[	$stand1,	tow_enf_stand2	] {FindTowerTarget();};
+void()	tow_enf_stand2	=[	$stand2,	tow_enf_stand3	] {FindTowerTarget();};
+void()	tow_enf_stand3	=[	$stand3,	tow_enf_stand4	] {FindTowerTarget();};
+void()	tow_enf_stand4	=[	$stand4,	tow_enf_stand5	] {FindTowerTarget();};
+void()	tow_enf_stand5	=[	$stand5,	tow_enf_stand6	] {FindTowerTarget();};
+void()	tow_enf_stand6	=[	$stand6,	tow_enf_stand7	] {FindTowerTarget();};
+void()	tow_enf_stand7	=[	$stand7,	tow_enf_stand1	] {FindTowerTarget();};
 
 void()	tow_enf_walk1	=[	$walk1 ,	tow_enf_walk2	] {
 	if (random() < 0.2)
@@ -171,13 +171,13 @@ void()	tow_enf_run1	=[	$run1  ,	tow_enf_run2	] {
 	ai_run(18);
 };
 
-void()	tow_enf_run2	=[	$run2  ,	tow_enf_run3	] {ai_run(14);};
-void()	tow_enf_run3	=[	$run3  ,	tow_enf_run4	] {ai_run(7);};
-void()	tow_enf_run4	=[	$run4  ,	tow_enf_run5	] {ai_run(12);};
-void()	tow_enf_run5	=[	$run5  ,	tow_enf_run6	] {ai_run(14);};
-void()	tow_enf_run6	=[	$run6  ,	tow_enf_run7	] {ai_run(14);};
-void()	tow_enf_run7	=[	$run7  ,	tow_enf_run8	] {ai_run(7);};
-void()	tow_enf_run8	=[	$run8  ,	tow_enf_run1	] {ai_run(11);};
+void()	tow_enf_run2	=[	$run2  ,	tow_enf_run3	] {bprint("somehow enf run was started?\n"); };
+void()	tow_enf_run3	=[	$run3  ,	tow_enf_run4	] {};
+void()	tow_enf_run4	=[	$run4  ,	tow_enf_run5	] {};
+void()	tow_enf_run5	=[	$run5  ,	tow_enf_run6	] {};
+void()	tow_enf_run6	=[	$run6  ,	tow_enf_run7	] {};
+void()	tow_enf_run7	=[	$run7  ,	tow_enf_run8	] {};
+void()	tow_enf_run8	=[	$run8  ,	tow_enf_stand1	] {};
 
 void()	tow_enf_atk1	=[	$attack1,	tow_enf_atk2	] {ai_face();};
 void()	tow_enf_atk2	=[	$attack2,	tow_enf_atk3	] {ai_face();};
@@ -192,7 +192,7 @@ void()	tow_enf_atk10	=[	$attack6,	tow_enf_atk11	] {enforcer_fire();};
 void()	tow_enf_atk11	=[	$attack7,	tow_enf_atk12	] {ai_face();};
 void()	tow_enf_atk12	=[	$attack8,	tow_enf_atk13	] {ai_face();};
 void()	tow_enf_atk13	=[	$attack9,	tow_enf_atk14	] {ai_face();};
-void()	tow_enf_atk14	=[	$attack10,	tow_enf_run1	] {
+void()	tow_enf_atk14	=[	$attack10,	tow_enf_stand1	] {
 	ai_face();
 	SUB_CheckRefire( tow_enf_atk1 );
 };
@@ -200,13 +200,13 @@ void()	tow_enf_atk14	=[	$attack10,	tow_enf_run1	] {
 void()	tow_enf_paina1	=[	$paina1,	tow_enf_paina2	] {};
 void()	tow_enf_paina2	=[	$paina2,	tow_enf_paina3	] {};
 void()	tow_enf_paina3	=[	$paina3,	tow_enf_paina4	] {};
-void()	tow_enf_paina4	=[	$paina4,	tow_enf_run1	] {};
+void()	tow_enf_paina4	=[	$paina4,	tow_enf_stand1	] {};
 
 void()	tow_enf_painb1	=[	$painb1,	tow_enf_painb2	] {};
 void()	tow_enf_painb2	=[	$painb2,	tow_enf_painb3	] {};
 void()	tow_enf_painb3	=[	$painb3,	tow_enf_painb4	] {};
 void()	tow_enf_painb4	=[	$painb4,	tow_enf_painb5	] {};
-void()	tow_enf_painb5	=[	$painb5,	tow_enf_run1	] {};
+void()	tow_enf_painb5	=[	$painb5,	tow_enf_stand1	] {};
 
 void()	tow_enf_painc1	=[	$painc1,	tow_enf_painc2	] {};
 void()	tow_enf_painc2	=[	$painc2,	tow_enf_painc3	] {};
@@ -215,27 +215,27 @@ void()	tow_enf_painc4	=[	$painc4,	tow_enf_painc5	] {};
 void()	tow_enf_painc5	=[	$painc5,	tow_enf_painc6	] {};
 void()	tow_enf_painc6	=[	$painc6,	tow_enf_painc7	] {};
 void()	tow_enf_painc7	=[	$painc7,	tow_enf_painc8	] {};
-void()	tow_enf_painc8	=[	$painc8,	tow_enf_run1	] {};
+void()	tow_enf_painc8	=[	$painc8,	tow_enf_stand1	] {};
 
 void()	tow_enf_paind1	=[	$paind1,	tow_enf_paind2	] {};
 void()	tow_enf_paind2	=[	$paind2,	tow_enf_paind3	] {};
 void()	tow_enf_paind3	=[	$paind3,	tow_enf_paind4	] {};
-void()	tow_enf_paind4	=[	$paind4,	tow_enf_paind5	] {ai_painforward(2);};
-void()	tow_enf_paind5	=[	$paind5,	tow_enf_paind6	] {ai_painforward(1);};
+void()	tow_enf_paind4	=[	$paind4,	tow_enf_paind5	] {};
+void()	tow_enf_paind5	=[	$paind5,	tow_enf_paind6	] {};
 void()	tow_enf_paind6	=[	$paind6,	tow_enf_paind7	] {};
 void()	tow_enf_paind7	=[	$paind7,	tow_enf_paind8	] {};
 void()	tow_enf_paind8	=[	$paind8,	tow_enf_paind9	] {};
 void()	tow_enf_paind9	=[	$paind9,	tow_enf_paind10	] {};
 void()	tow_enf_paind10	=[	$paind10,	tow_enf_paind11	] {};
-void()	tow_enf_paind11	=[	$paind11,	tow_enf_paind12	] {ai_painforward(1);};
-void()	tow_enf_paind12	=[	$paind12,	tow_enf_paind13	] {ai_painforward(1);};
-void()	tow_enf_paind13	=[	$paind13,	tow_enf_paind14	] {ai_painforward(1);};
+void()	tow_enf_paind11	=[	$paind11,	tow_enf_paind12	] {};
+void()	tow_enf_paind12	=[	$paind12,	tow_enf_paind13	] {};
+void()	tow_enf_paind13	=[	$paind13,	tow_enf_paind14	] {};
 void()	tow_enf_paind14	=[	$paind14,	tow_enf_paind15	] {};
 void()	tow_enf_paind15	=[	$paind15,	tow_enf_paind16	] {};
-void()	tow_enf_paind16	=[	$paind16,	tow_enf_paind17	] {ai_pain(1);};
-void()	tow_enf_paind17	=[	$paind17,	tow_enf_paind18	] {ai_pain(1);};
+void()	tow_enf_paind16	=[	$paind16,	tow_enf_paind17	] {};
+void()	tow_enf_paind17	=[	$paind17,	tow_enf_paind18	] {};
 void()	tow_enf_paind18	=[	$paind18,	tow_enf_paind19	] {};
-void()	tow_enf_paind19	=[	$paind19,	tow_enf_run1	] {};
+void()	tow_enf_paind19	=[	$paind19,	tow_enf_stand1	] {};
 
 void(entity attacker, float damage)	tow_enf_pain =
 {
@@ -361,19 +361,18 @@ void(vector org, entity tow_owner) monster_tow_enforcer =
 	tower.movetype = MOVETYPE_STEP;
 	tower.classname = "monster_army";
 	setmodel (tower, "progs/enforcer.mdl");
-	tower.owner = tow_owner;
+	tower.tower_owner = tow_owner;
 	tower.noise = "enforcer/sight1.wav";
 	tower.noise1 = "enforcer/sight2.wav";
 	tower.noise2 = "enforcer/sight3.wav";
 	tower.noise3 = "enforcer/sight4.wav";
 
 	tower.netname = "$qc_enforcer";
-	tower.netname = "$qc_grunt";
 
 	tower.killstring = "$qc_ks_enforcer";
 
 	setsize (tower, '-16 -16 -24', '16 16 40');
-	setorigin (tower, org + '0 0 32');
+	setorigin (tower, org + '0 0 50');
 
 	tower.health = 80;
 	tower.max_health = 80;

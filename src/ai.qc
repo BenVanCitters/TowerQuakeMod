@@ -235,10 +235,14 @@ float(entity targ) infront =
 
 void() HuntTarget =
 {
+	bprint("HuntTarget\n" );
 	self.goalentity = self.enemy;
 	
-	if(self.owner.classname == "player" )
+	if(self.tower_owner.classname == "player" )
 	{
+		//
+		//bprint(self.tower_owner.classname);
+		//bprint("]\n");
 		self.think = self.th_missile;
 	}
 	else
@@ -282,6 +286,115 @@ void() FoundTarget =
 	HuntTarget ();
 };
 
+
+//used for multiple entities (besides just monsters or players)
+//assmue 'self' is the monster currently checking...
+//returns true if thisEnt is a valid target
+float(entity thisEnt) testEntityForTarget
+{
+	local float		r;
+	if (thisEnt == self.enemy)
+		return FALSE;
+
+	if (thisEnt.flags & FL_NOTARGET)
+		return FALSE;
+
+	if (thisEnt.items & IT_INVISIBILITY)
+		return FALSE;
+
+	r = range (thisEnt);
+	if (r == RANGE_FAR)
+		return FALSE;
+		
+	if (!visible (thisEnt))
+		return FALSE;
+
+	if (r == RANGE_NEAR)
+	{
+		if (thisEnt.show_hostile < time && !infront (thisEnt))
+			return FALSE;
+	}
+
+	else if (r == RANGE_MID)
+	{
+		if ( !infront (thisEnt))
+			return FALSE;
+	}
+	return TRUE;
+}
+
+// prooduce a 'chain' based list of potentially viable towers for a monster ('self' is the monster)
+entity() GetViableTowerTargets =
+{
+	local entity viableNextEnemies;
+	local entity lastEnemy;
+	local float entCount = 0;
+	
+	//look for turrets!
+	local entity head;
+	head = findradius(self.origin, 1001);
+	viableNextEnemies = lastEnemy = head;
+	
+	while (head)
+	{
+		local entity nxt = head.chain;
+		
+		local float isSelf = (self == head);
+		local float isTeamMonster = head.team == TEAM_MONSTERS;
+		local float hasMonsterFlag = (head.flags & FL_MONSTER);
+		local float isTurret = head.tower_owner != world;
+		local float isMonster = isTeamMonster || hasMonsterFlag;
+		local float isAlive = (head.solid != SOLID_NOT) && (head.health > 0);
+		//local float isPlayer =  (head.classname == "player");
+		//local float isTowerOwner = (self.tower_owner == head);
+		//local float hasSameTowerOwner = (self.tower_owner == head.tower_owner);
+		//local float lastEnemyDied = ((self.enemy != world) && (self.enemy.health <= 0) );
+		//local float currentFriend = (head != self.enemy);
+		//local float isVisibleToTurret = !(head.flags & FL_NOTARGET) && !(head.items & IT_INVISIBILITY) ;
+		
+		//r = range (head);
+		//local float isInRange = (r != RANGE_FAR);
+		local float canSeeTarget = visible (head);
+		
+		if( isMonster && isAlive && !isSelf && isTurret && isMonster && isAlive && canSeeTarget && testEntityForTarget(head) )
+		{
+			lastEnemy.chain = head;
+			lastEnemy = head;			
+			entCount = entCount + 1;
+		}
+		head = nxt;
+	}
+	if(entCount < 1)
+		return world;
+	//bprint("\n");
+	lastEnemy.chain = world;
+	return viableNextEnemies;
+}
+
+entity(entity thisEnt) GetLastEntityInChain =
+{
+	while (thisEnt.chain)
+	{
+		thisEnt = thisEnt.chain;
+	}
+	return thisEnt;
+}
+
+float(entity thisEnt) GetChainLength =
+{
+	//bprint("targets: " );
+	local float funcresult = 1;
+	while (thisEnt.chain)
+	{			
+	draw_line(thisEnt.origin, self.origin, 192, 15, TRUE);
+		bprint(thisEnt.classname);
+		//bprint(", ");
+		funcresult = funcresult + 1;
+		thisEnt = thisEnt.chain;
+	}
+	//bprint("\n");
+	return funcresult;
+}
 /*
 ===========
 FindTarget
@@ -302,7 +415,6 @@ slower noticing monsters.
 float() FindTarget =
 {
 	local entity	client;
-	local float		r;
 
 // if the first spawnflag bit is set, the monster will only wake up on
 // really seeing the player, not another monster getting angry
@@ -310,6 +422,10 @@ float() FindTarget =
 // spawnflags & 3 is a big hack, because zombie crucified used the first
 // spawn flag prior to the ambush flag, and I forgot about it, so the second
 // spawn flag works as well
+
+	local entity viableNextEnemies = GetViableTowerTargets();
+	local entity lastEnemy = GetLastEntityInChain(viableNextEnemies);
+
 	if (sight_entity_time >= time - 0.1 && !(self.spawnflags & 3) )
 	{
 		client = sight_entity;
@@ -320,57 +436,83 @@ float() FindTarget =
 	{
 		client = checkclient ();
 		if (!client)
-			return FALSE;	// current check entity isn't in PVS
-	}
-
-	if (client == self.enemy)
-		return FALSE;
-
-	if (client.flags & FL_NOTARGET)
-		return FALSE;
-
-	if (client.items & IT_INVISIBILITY)
-		return FALSE;
-
-	r = range (client);
-	if (r == RANGE_FAR)
-		return FALSE;
-		
-	if (!visible (client))
-		return FALSE;
-
-	if (r == RANGE_NEAR)
-	{
-		if (client.show_hostile < time && !infront (client))
-			return FALSE;
-	}
-
-	else if (r == RANGE_MID)
-	{
-		if ( !infront (client))
-			return FALSE;
-	}
-	
-//
-// got one
-//
-	self.enemy = client;
-	if (self.enemy.classname != "player")
-	{
-		self.enemy = self.enemy.enemy;
-		if (self.enemy.classname != "player")
 		{
-			bprint("FindTarget setting enemy\n");
-			self.enemy = world;
-			return FALSE;
+			//bprint("early outsies!\n");
+			return FALSE;	// current check entity isn't in PVS
 		}
 	}
+
+
+	local float countEnem = GetChainLength(viableNextEnemies);
+	
+	local entity head = viableNextEnemies;
+	if( testEntityForTarget(client) )
+	{
+		//this is weird 
+		//if last enemy IS world (the sentinel returned from the above when there are NO valid targets)
+		// then we can set world.chain - that will crash so we just set the head to be what we want...
+		if(lastEnemy)
+		{
+			lastEnemy.chain = client;
+		}
+		else
+		{
+			head = lastEnemy = client;
+		}
+		countEnem = countEnem +1;
+	}
+	
+	
+	local float r_index = floor( random() * countEnem );
+	local float index = 0;
+	
+	//while (index < r_index)
+	//{
+	//	index = index + 1;
+	//	head = head.chain;
+	//}
+	
+	if(FALSE && countEnem > 0)
+	{
+		bprint("count: " );
+		bprint(ftos(countEnem));
+		bprint(" -- ");
+		
+		bprint("r_index: " );
+		bprint(ftos(r_index));
+		bprint(" -- ");
+		
+		bprint("head classname: " );
+		bprint(head.classname);
+		bprint("\n");
+	}
+	if(head == self.enemy)
+		return FALSE;
+	if(!head)
+		return FALSE;
+	//
+	// got one
+	//	
+	self.enemy = head;
+	
+	//early out if we are looing at something other than the player really really
+	//if (self.enemy.classname != "player")
+	//{
+	//	self.enemy = self.enemy.enemy;
+	//	if (self.enemy.classname != "player")
+	//	{
+	//		self.enemy = world;
+	//		return FALSE;
+	//	}
+	//}
 	
 	FoundTarget ();
 	return TRUE;
 };
 
-float() FindTowerTarget =
+
+
+void() FindTowerTarget =
 {
 	local float	r;
 	local	entity	head;
@@ -378,44 +520,49 @@ float() FindTowerTarget =
 	head = findradius(self.origin, 999999999);
 	//bprint("firetowertarg\n");
 	
-	if( !visible(self.enemy) )
+	
+	while (head)
 	{
-		while (head)
+		local float isSelf = (self == head);
+		local float isTeamMonster = head.team == TEAM_MONSTERS;
+		local float hasMonsterFlag = (head.flags & FL_MONSTER);
+		local float isMonster = isTeamMonster || hasMonsterFlag;
+		local float isPlayer =  (head.classname == "player");
+		local float isTowerOwner = (self.tower_owner == head);
+		local float hasSameTowerOwner = (self.tower_owner == head.tower_owner);
+		local float isAlive = (head.solid != SOLID_NOT) && (head.health > 0);
+		local float lastEnemyDied = ((self.enemy != world) && (self.enemy.health <= 0) );
+		local float currentFriend = (head != self.enemy);
+		local float isVisibleToTurret = !(head.flags & FL_NOTARGET) && !(head.items & IT_INVISIBILITY) ;
+		r = range (head);
+		local float isInRange = (r != RANGE_FAR);
+		local float canSeeTarget = visible (head);
+		
+		//draw_line(head.origin, self.origin, 251, 5, TRUE);
+		if ( !isSelf &&  (isPlayer || isMonster) )
 		{
-			if ( (head.team == TEAM_MONSTERS) || (head.classname == "player") || (head.flags & FL_MONSTER) )
+			//draw_line(head.origin, self.origin, 244, 5, TRUE);
+			if ( !isTowerOwner && !hasSameTowerOwner && isAlive )
 			{
+				//draw_line(head.origin, self.origin, 192, 5, TRUE);
+				if ( isVisibleToTurret && isInRange && canSeeTarget ) //&&  ( infront (head) )
+				{							
+					draw_line(head.origin, self.origin, 244, 15, TRUE);
+					//
+					// got one
+					//
+					self.enemy = head;	
+					bprint("setting enemy to ");
+					bprint(head.classname);
+					bprint("\n");			
+					FoundTarget ();					
+				}	
 				
-				if ( (self.owner != head.owner) && (self.owner != head) && (head.solid != SOLID_NOT))
-				{
-					
-					if ( //(head != self.enemy) && 
-					     (head.health > 0) &&
-					    !(head.flags & FL_NOTARGET) && 
-					    !(head.items & IT_INVISIBILITY) )
-					{
-						
-						r = range (head);
-						if ( (r != RANGE_FAR) && ( visible (head) ) ) //&&  ( infront (head) )
-						{
-							draw_line(head.origin, self.origin, 254, 5, TRUE);
-							//
-							//
-							// got one
-							//
-							self.enemy = head;	
-							bprint("setting enemy to ");
-							bprint(head.classname);
-							bprint("\n");			
-							FoundTarget ();
-							return TRUE;						
-						}	
-					}
-				}
 			}
-			head = head.chain;
 		}
+		head = head.chain;
 	}
-	return FALSE;
+	
 };
 
 //=============================================================================
@@ -491,12 +638,6 @@ void() ai_stand =
 		self.th_walk ();
 		return;
 	}
-};
-
-void() ai_tower_stand =
-{
-	if (FindTowerTarget ())
-		return;
 };
 
 /*
@@ -706,7 +847,6 @@ The monster has an enemy it is trying to kill
 */
 void(float dist) ai_run =
 {
-	
 	movedist = dist;
 // see if the enemy is dead
 	if (self.enemy.health <= 0)

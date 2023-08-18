@@ -560,6 +560,8 @@ float WORLDTYPE_BASE = 2;
 
 .entity		oldenemy;		// mad at this player before taking damage
 
+.entity		tower_owner;	// who created this 'tower'
+
 .float		speed;
 
 .float	lefty;

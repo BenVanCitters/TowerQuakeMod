@@ -99,6 +99,7 @@ void(entity targ, entity attacker) Killed =
 		return;
 	}
 
+	//bprint("killed set enemy");
 	self.enemy = attacker;
 
 	// bump the monster counter
@@ -245,7 +246,7 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 			{
 				if (self.enemy.classname == "player")
 					self.oldenemy = self.enemy;
-
+				//bprint("setting enemy\n");
 				self.enemy = attacker;
 				FoundTarget ();
 			}
