@@ -257,6 +257,9 @@ void(vector org, entity tow_owner) monster_tow_army =
 	tower.angles_y =0;
 	
 	
+	tower.tower_upgrade_points = 0;
+	tower.tower_upgrade_level = 0;
+	
 	tower.solid = SOLID_SLIDEBOX ;
 	tower.movetype = MOVETYPE_STEP;
 	tower.classname = "monster_army";

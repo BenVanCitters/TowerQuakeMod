@@ -46,6 +46,48 @@ float() crandom =
 	return 2*(random() - 0.5);
 };
 
+//should either add health or bump up the tower
+//soldier -> enforcer -> ogre -> hellknight -> vore -> shambler 
+void(vector org, entity tow_owner) monster_tow_enforcer;
+void(vector org, entity tow_owner) monster_tow_ogre;
+void(vector) spawn_tfog;
+void(entity tower) upgradeTower = 
+{
+	if(tower.tower_upgrade_level == 1 ) //"grunt -> enforcer")
+	{
+		monster_tow_enforcer(tower.origin, tower.tower_owner);		
+	}
+	else if(tower.tower_upgrade_level == 2 ) //"enforcer -> ogre")
+	{
+		monster_tow_ogre(tower.origin, tower.tower_owner);		
+	}
+	else if(tower.tower_upgrade_level == 3 ) //"ogre -> hellknight")
+	{
+		monster_tow_enforcer(tower.origin, tower.tower_owner);		
+	}
+	else if(tower.tower_upgrade_level == 4 ) //"hellknight -> vore")
+	{
+		monster_tow_enforcer(tower.origin, tower.tower_owner);		
+	}
+	else if(tower.tower_upgrade_level == 5 ) //"vore -> shambler")
+	{
+		monster_tow_enforcer(tower.origin, tower.tower_owner);		
+	}
+	spawn_tfog(tower.origin);
+	T_Damage(tower, tower, tower, 10000);
+}
+
+void(entity tower) tower_checkUpgrade = 
+{
+	if(tower.tower_upgrade_points > 4)
+	{
+		tower.tower_upgrade_level += 1;
+		tower.tower_upgrade_points = 0;
+		upgradeTower(tower);
+	}
+}
+
+
 /*
 ================
 W_FireAxe
@@ -63,8 +105,12 @@ void() W_FireAxe =
 		return;
 	
 	org = trace_endpos - v_forward*4;
-
-	if (trace_ent.takedamage)
+	if (trace_ent.takedamage && trace_ent.tower_owner == self)
+	{
+		trace_ent.tower_upgrade_points += 1; 
+		tower_checkUpgrade(trace_ent);
+	}
+	else if (trace_ent.takedamage)
 	{
 		trace_ent.axhitme = 1;
 		SpawnBlood (org, '0 0 0', 20);
@@ -549,7 +595,7 @@ void() GrenadeExplode =
 	bprint("explode: making tower for [" );
 	bprint(self.owner.classname);
 	bprint("]\n");
-	monster_tow_enforcer( self.origin, self.owner );
+	monster_tow_army( self.origin, self.owner );
 };
 
 void() GrenadeTouch =

@@ -367,8 +367,8 @@ void(vector org, entity tow_owner) monster_tow_enforcer =
 	tower.noise2 = "enforcer/sight3.wav";
 	tower.noise3 = "enforcer/sight4.wav";
 	
-	tower.tower_upgrade_points = floor(random() * 5);
-	
+	tower.tower_upgrade_points = 0;
+	tower.tower_upgrade_level = 1;
 	tower.netname = "$qc_enforcer";
 
 	tower.killstring = "$qc_ks_enforcer";

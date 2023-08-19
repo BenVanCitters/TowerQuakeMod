@@ -39,6 +39,7 @@ monsters/enforcer.qc	// registered
 monsters/shub.qc		// registered
 monsters/tower/tow_grunt.qc
 monsters/tower/tow_enforcer.qc
+monsters/tower/tow_ogre.qc
 
 monsters/tower.qc
 

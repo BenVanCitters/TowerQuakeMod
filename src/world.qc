@@ -349,6 +349,18 @@ void() worldspawn =
 	precache_sound2 ("enforcer/sight4.wav");
 
 
+/*QUAKED monster_tow_ogre (1 0 0) (-32 -32 -24) (32 32 64) Ambush*/
+	precache_model ("progs/ogre.mdl");
+	precache_model ("progs/h_ogre.mdl");
+	precache_model ("progs/grenade.mdl");
+
+	precache_sound ("ogre/ogdrag.wav");
+	precache_sound ("ogre/ogdth.wav");
+	precache_sound ("ogre/ogidle.wav");
+	precache_sound ("ogre/ogidle2.wav");
+	precache_sound ("ogre/ogpain1.wav");
+	precache_sound ("ogre/ogsawatk.wav");
+	precache_sound ("ogre/ogwake.wav");
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
 //
