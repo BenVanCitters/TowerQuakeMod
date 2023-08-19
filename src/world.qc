@@ -314,6 +314,8 @@ void() worldspawn =
 	
 
 	//precaches for towers
+	precache_model ("progs/m_s_key.mdl");
+	
 	//soldier/grunt
 	precache_model ("progs/soldier.mdl");
 	precache_model ("progs/h_guard.mdl");

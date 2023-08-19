@@ -561,7 +561,8 @@ float WORLDTYPE_BASE = 2;
 .entity		oldenemy;		// mad at this player before taking damage
 
 .entity		tower_owner;	// who created this 'tower'
-
+.float		tower_upgrade_points; //points towards the next level
+.float		tower_upgrade_level; //current upgrade level
 .float		speed;
 
 .float	lefty;
