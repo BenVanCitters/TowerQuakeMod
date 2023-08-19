@@ -10,6 +10,7 @@ itemnames.qc
 items.qc
 weapons.qc
 world.qc
+in_world_hud.qc
 client.qc
 player.qc
 monsters.qc
