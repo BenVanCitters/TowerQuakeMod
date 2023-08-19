@@ -1179,6 +1179,101 @@ void() CheckWaterJump =
 	}
 };
 
+.float towerMaxHealth;
+.float healthShowTime;
+.entity health1, health2, health3, health4, health5;
+
+void() healthIconThink=
+{
+	makevectors (self.owner.angles);
+	local vector towerLeft = -1.0 * v_right;
+	local vector towerUp = v_up;
+	
+	setorigin (self, self.owner.origin + towerLeft* self.dest_x + v_up * self.dest_z);
+	
+	self.nextthink = time + 0.1;
+	self.think = healthIconThink;
+	local float curHealthPct = self.owner.health/self.owner.max_health;
+	if(time > self.owner.healthShowTime || curHealthPct < self.dmg)
+	{
+		self.health = 0;
+		remove(self);
+	}
+}
+
+entity(entity tower, vector pos, float minPct) makeHealthIcon =
+{
+	local entity helt= spawn ();
+	helt.health = 1;
+	helt.owner = tower;
+	helt.movetype = MOVETYPE_NOCLIP;
+	helt.solid = SOLID_NOT;
+	helt.classname = "healthIcon";
+	helt.dest = pos; // co opt ;dest' as a local coordinate space position 
+	helt.dmg = minPct; //co opt 'dmg' as min health pct
+	makevectors (self.v_angle);
+	//missile.angles = vectoangles(missile.velocity);
+	
+	helt.nextthink = time + 0.1;
+	helt.think = healthIconThink;
+
+	setmodel (helt, "progs/zom_gib.mdl");
+	setsize (helt, '0 0 0', '0 0 0');			
+	return helt;
+}
+
+void(entity tower) showHealth =
+{
+	local float healthPct = tower.health / tower.max_health; // current / max
+	makevectors (tower.angles);
+	local vector towerLeft = -1.0 * v_right;
+	local vector towerUp = v_up;
+	if(time > self.owner.healthShowTime && tower.health1.health == 0)
+	{
+		if(healthPct > 0)
+		{
+			tower.health1 = makeHealthIcon(tower, '-20 0 40',0);
+			//setorigin (tower.health1, tower.origin + towerLeft * -20 + towerUp * 40);
+		}
+		if(healthPct > .4)
+		{
+			tower.health2 = makeHealthIcon(tower, '-10 0 40', .4);
+			//setorigin (tower.health2, tower.origin + towerLeft * -10 + towerUp * 40);
+		}
+		if(healthPct > .6)
+		{
+			tower.health3 = makeHealthIcon(tower, '-0 0 40', .6);
+			//setorigin (tower.health3, tower.origin + towerLeft * 0 + towerUp * 40);
+		}
+		if(healthPct > .8)
+		{
+			tower.health4 = makeHealthIcon(tower, '10 0 40', .8);
+			//setorigin (tower.health4, tower.origin + towerLeft * 10 + towerUp * 40);
+		}
+		if(healthPct > .9)
+		{
+			tower.health5 = makeHealthIcon(tower, '20 0 40', .9);
+		}
+	}
+	tower.healthShowTime = time + 1;
+}
+
+void() reticuleOver =
+{
+	makevectors (self.v_angle);
+	local vector source = self.origin + '0 0 16';
+	traceline (source, source + v_forward*2000, FALSE, self);
+	draw_line(source, source + v_forward*2000, 246, 1, TRUE);
+		centerprint(self, " test \n " );
+	if(trace_ent.takedamage)// && trace_ent.health > 0 && trace_ent.flags & FL_MONSTER)
+	{
+		showHealth(trace_ent);
+		//centerprint(self, trace_ent.classname);
+		//centerprint(self, " has \n" );
+		centerprint(self,  trace_ent.classname,"\n has " );
+		//centerprint(self, "\n");
+	}
+}
 
 /*
 ================

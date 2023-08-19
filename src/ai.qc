@@ -434,7 +434,7 @@ float() FindTarget =
 	}
 	else
 	{
-		client = checkclient ();
+		client = checkclient (); //check client returns a player or something mad at the player...
 		if (!client)
 		{
 			//bprint("early outsies!\n");
@@ -495,16 +495,20 @@ float() FindTarget =
 	//	
 	self.enemy = head;
 	
-	//early out if we are looing at something other than the player really really
-	//if (self.enemy.classname != "player")
-	//{
-	//	self.enemy = self.enemy.enemy;
-	//	if (self.enemy.classname != "player")
-	//	{
-	//		self.enemy = world;
-	//		return FALSE;
-	//	}
-	//}
+	//we need to make sure to bail when monsters see other monsters that are mad at the player
+	if(head == client)
+	{
+		//early out if we are looing at something other than the player really really
+		if (self.enemy.classname != "player")
+		{
+			self.enemy = self.enemy.enemy;
+			if (self.enemy.classname != "player")
+			{
+				self.enemy = world;
+				return FALSE;
+			}
+		}
+	}
 	
 	FoundTarget ();
 	return TRUE;
