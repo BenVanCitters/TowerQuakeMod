@@ -40,6 +40,11 @@ monsters/shub.qc		// registered
 monsters/tower/tow_grunt.qc
 monsters/tower/tow_enforcer.qc
 monsters/tower/tow_ogre.qc
+monsters/tower/tow_hellknight.qc
+monsters/tower/tow_vore.qc
+monsters/tower/tow_shambler.qc
+
+
 
 monsters/tower.qc
 

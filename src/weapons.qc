@@ -50,6 +50,8 @@ float() crandom =
 //soldier -> enforcer -> ogre -> hellknight -> vore -> shambler 
 void(vector org, entity tow_owner) monster_tow_enforcer;
 void(vector org, entity tow_owner) monster_tow_ogre;
+void(vector org, entity tow_owner) monster_tow_hell_knight;
+void(vector org, entity tow_owner) monster_tow_shalrath;
 void(vector) spawn_tfog;
 void(entity tower) upgradeTower = 
 {
@@ -63,11 +65,11 @@ void(entity tower) upgradeTower =
 	}
 	else if(tower.tower_upgrade_level == 3 ) //"ogre -> hellknight")
 	{
-		monster_tow_enforcer(tower.origin, tower.tower_owner);		
+		monster_tow_hell_knight(tower.origin , tower.tower_owner);		
 	}
 	else if(tower.tower_upgrade_level == 4 ) //"hellknight -> vore")
 	{
-		monster_tow_enforcer(tower.origin, tower.tower_owner);		
+		monster_tow_shalrath(tower.origin, tower.tower_owner);		
 	}
 	else if(tower.tower_upgrade_level == 5 ) //"vore -> shambler")
 	{
@@ -109,6 +111,7 @@ void() W_FireAxe =
 	{
 		trace_ent.tower_upgrade_points += 1; 
 		tower_checkUpgrade(trace_ent);
+		sound (self, CHAN_WEAPON, "items/armor1.wav", 1, ATTN_NORM);
 	}
 	else if (trace_ent.takedamage)
 	{

@@ -63,6 +63,7 @@ SOLDIER CODE
 ==============================================================================
 */
 
+
 void() tow_army_fire;
 
 void()	tow_army_stand1	=[	$stand1,	tow_army_stand2	] {FindTowerTarget();};
