@@ -235,7 +235,6 @@ float(entity targ) infront =
 
 void() HuntTarget =
 {
-	bprint("HuntTarget\n" );
 	self.goalentity = self.enemy;
 	
 	if(self.tower_owner.classname == "player" )
@@ -274,6 +273,8 @@ void SightSound() {
 
 void() FoundTarget =
 {
+	
+	
 	if (self.enemy.classname == "player")
 	{	// let other monsters see this monster for a while
 		sight_entity = self;
@@ -358,6 +359,7 @@ entity() GetViableTowerTargets =
 		
 		if( isMonster && isAlive && !isSelf && isTurret && isMonster && isAlive && canSeeTarget && testEntityForTarget(head) )
 		{
+			//bprint("spotted a turret!!\n");
 			lastEnemy.chain = head;
 			lastEnemy = head;			
 			entCount = entCount + 1;
@@ -383,11 +385,11 @@ entity(entity thisEnt) GetLastEntityInChain =
 float(entity thisEnt) GetChainLength =
 {
 	//bprint("targets: " );
-	local float funcresult = 1;
+	local float funcresult = 0;
 	while (thisEnt.chain)
 	{			
-	draw_line(thisEnt.origin, self.origin, 192, 15, TRUE);
-		bprint(thisEnt.classname);
+		//draw_line(thisEnt.origin, self.origin, 192, 15, TRUE);
+		//bprint(thisEnt.classname);
 		//bprint(", ");
 		funcresult = funcresult + 1;
 		thisEnt = thisEnt.chain;
@@ -466,13 +468,16 @@ float() FindTarget =
 	local float r_index = floor( random() * countEnem );
 	local float index = 0;
 	
-	//while (index < r_index)
-	//{
-	//	index = index + 1;
-	//	head = head.chain;
-	//}
-	
-	if(FALSE && countEnem > 0)
+	while (index < r_index && head.chain != world)
+	{
+		index = index + 1;
+		head = head.chain;
+	}
+	if(head == self.enemy)
+		return FALSE;
+	if(!head)
+		return FALSE;
+	if(countEnem > 0)
 	{
 		bprint("count: " );
 		bprint(ftos(countEnem));
@@ -485,11 +490,9 @@ float() FindTarget =
 		bprint("head classname: " );
 		bprint(head.classname);
 		bprint("\n");
+		eprint(head);
 	}
-	if(head == self.enemy)
-		return FALSE;
-	if(!head)
-		return FALSE;
+
 	//
 	// got one
 	//	
@@ -498,7 +501,7 @@ float() FindTarget =
 	//we need to make sure to bail when monsters see other monsters that are mad at the player
 	if(head == client)
 	{
-		//early out if we are looing at something other than the player really really
+		//early out if we are looking at something other than the player really ... really
 		if (self.enemy.classname != "player")
 		{
 			self.enemy = self.enemy.enemy;
@@ -520,7 +523,9 @@ void() FindTowerTarget =
 {
 	local float	r;
 	local	entity	head;
-
+	
+	droptofloor();	
+	
 	head = findradius(self.origin, 999999999);
 	//bprint("firetowertarg\n");
 	
@@ -556,10 +561,11 @@ void() FindTowerTarget =
 					// got one
 					//
 					self.enemy = head;	
-					bprint("setting enemy to ");
-					bprint(head.classname);
-					bprint("\n");			
-					FoundTarget ();					
+					//bprint("setting enemy to ");
+					//bprint(head.classname);
+					//bprint("\n");			
+					FoundTarget ();			
+					return;		
 				}	
 				
 			}

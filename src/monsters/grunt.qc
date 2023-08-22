@@ -107,7 +107,8 @@ void()	army_walk24	=[	$prowl_24,	army_walk1	] {ai_walk(1);};
 void()	army_run1	=[	$run1,		army_run2	] {
 	if (random() < 0.2)
 		sound (self, CHAN_VOICE, "soldier/idle.wav", 1, ATTN_IDLE);
-
+	//bprint(ftos(self));
+	//bprint(" - army_run\n");
 	ai_run(11);
 };
 
@@ -282,6 +283,61 @@ void() army_die =
 };
 
 
+
+
+
+void(entity myEntity) monster_army_spawn =
+{
+	bprint("printing new grunt: \n");
+	eprint(myEntity);
+	myEntity.classname = "	";
+	//if there is something at the spawn don't do anything...
+	traceline(myEntity.origin - '0 1 0', myEntity.origin + '0 1 0', FALSE, self);
+	if(trace_ent != world)
+		return;
+		
+	setorigin (myEntity, myEntity.origin);
+
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
+
+	setmodel (myEntity, "progs/soldier.mdl");
+
+	myEntity.noise = "soldier/sight1.wav";
+	myEntity.netname = "$qc_grunt";
+	myEntity.killstring = "$qc_ks_grunt";
+
+	setsize (myEntity, '-16 -16 -24', '16 16 40');
+	myEntity.health = 30;
+	myEntity.max_health = 30;
+
+	myEntity.th_stand = army_stand1;
+	myEntity.th_walk = army_walk1;
+	myEntity.th_run = army_run1;
+	myEntity.th_missile = army_atk1;
+	myEntity.th_pain = army_pain;
+	myEntity.th_die = army_die;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_RANGED;
+	//instead of just calling 'walkmonsterstart' we use 'think' to properly set self
+	myEntity.think = walkmonster_start;
+	myEntity.nextthink = 0.1;
+};
+
+void() newArmySpawn =
+{
+	local entity new_enemy = spawn();
+	//copy origin and angles in from the map entity settings
+	new_enemy.origin = self.origin;
+	new_enemy.angles = self.angles;
+	monster_army_spawn(new_enemy);
+	
+	self.think = newArmySpawn;
+	self.nextthink = time + self.respawn_wait;
+	//.float		next_respawn;
+	//.float		respawn_wait;
+}
+
 /*QUAKED monster_army (1 0 0) (-16 -16 -24) (16 16 40) Ambush*/
 void() monster_army =
 {	
@@ -305,29 +361,14 @@ void() monster_army =
 	precache_sound ("soldier/sight1.wav");
 
 	precache_sound ("player/udeath.wav");		// gib death
-
-
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
-
-	setmodel (self, "progs/soldier.mdl");
-
-	self.noise = "soldier/sight1.wav";
-	self.netname = "$qc_grunt";
-	self.killstring = "$qc_ks_grunt";
-
-	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 30;
-	self.max_health = 30;
-
-	self.th_stand = army_stand1;
-	self.th_walk = army_walk1;
-	self.th_run = army_run1;
-	self.th_missile = army_atk1;
-	self.th_pain = army_pain;
-	self.th_die = army_die;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_RANGED;
-
-	walkmonster_start ();
-};
+	
+	self.respawn_wait = 5;
+	
+	local entity monster_spawner = spawn();
+	monster_spawner.respawn_wait = self.respawn_wait;
+	monster_spawner.origin = self.origin;
+	monster_spawner.angles = self.angles;
+	monster_spawner.think = newArmySpawn;
+	monster_spawner.nextthink = time + 0.1;
+	monster_army_spawn(self);
+}

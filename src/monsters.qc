@@ -134,8 +134,26 @@ void() walkmonster_start_go =
 
 	else
 	{
-		self.pausetime = 99999999;
-		self.th_stand ();
+		local entity localclient = find(world, classname, "player");// checkclient ();
+		
+		bprint("I'm a ");
+		bprint(self.classname);
+		bprint(" and my check client was a ");
+		bprint(localclient.classname);
+		bprint(" der der der\n");
+		if(localclient.classname == "player")
+		{
+			bprint("walking to 'client'\n");
+			self.goalentity = self.movetarget = localclient;
+			self.ideal_yaw = vectoyaw(self.goalentity.origin - self.origin);
+			self.th_walk ();
+
+		}
+		else
+		{
+			self.pausetime = 99999999;
+			self.th_stand ();
+		}
 	}
 
 	// spread think times so they don't all happen at same time
@@ -184,9 +202,17 @@ void ( entity tower ) turret_monster_init =
 }
 void() walkmonster_start =
 {
+	//if the monsters start looking for the player too soon they wont 
+	//find the player - for some reason - wait 1.5 seconds so the 'player'
+	// is there for sure.
+	local float start_delay = 1.5;
+	if( time > 10)
+	{
+		start_delay = 0;
+	}
 	// delay drop to floor to make sure all doors have been spawned
 	// spread think times so they don't all happen at same time
-	self.nextthink = self.nextthink + random()*0.5;
+	self.nextthink = self.nextthink + start_delay +random()*0.5;
 	self.think = walkmonster_start_go;
 	total_monsters = total_monsters + 1;
 };

@@ -56,23 +56,23 @@ void(vector org, entity tow_owner) monster_tow_shambler;
 void(vector) spawn_tfog;
 void(entity tower) upgradeTower = 
 {
-	if(tower.tower_upgrade_level == 1 ) //"grunt -> enforcer")
+	if(tower.tower_upgrade_level == 1 ) //"grunt -> enforcer"
 	{
 		monster_tow_enforcer(tower.origin, tower.tower_owner);		
 	}
-	else if(tower.tower_upgrade_level == 2 ) //"enforcer -> ogre")
+	else if(tower.tower_upgrade_level == 2 ) //"enforcer -> ogre"
 	{
 		monster_tow_ogre(tower.origin, tower.tower_owner);		
 	}
-	else if(tower.tower_upgrade_level == 3 ) //"ogre -> hellknight")
+	else if(tower.tower_upgrade_level == 3 ) //"ogre -> hellknight"
 	{
 		monster_tow_hell_knight(tower.origin , tower.tower_owner);		
 	}
-	else if(tower.tower_upgrade_level == 4 ) //"hellknight -> vore")
+	else if(tower.tower_upgrade_level == 4 ) //"hellknight -> vore"
 	{
 		monster_tow_shalrath(tower.origin, tower.tower_owner);		
 	}
-	else if(tower.tower_upgrade_level == 5 ) //"vore -> shambler")
+	else if(tower.tower_upgrade_level == 5 ) //"vore -> shambler"
 	{
 		monster_tow_shambler(tower.origin, tower.tower_owner);		
 	}
