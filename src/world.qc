@@ -393,6 +393,21 @@ void() worldspawn =
 	precache_sound2 ("shalrath/pain.wav");
 	precache_sound2 ("shalrath/sight.wav");
 	
+	//shambler
+	precache_model ("progs/shambler.mdl");
+	precache_model ("progs/s_light.mdl");
+	precache_model ("progs/h_shams.mdl");
+	precache_model ("progs/bolt.mdl");
+	
+	precache_sound ("shambler/sattck1.wav");
+	precache_sound ("shambler/sboom.wav");
+	precache_sound ("shambler/sdeath.wav");
+	precache_sound ("shambler/shurt2.wav");
+	precache_sound ("shambler/sidle.wav");
+	precache_sound ("shambler/ssight.wav");
+	precache_sound ("shambler/melee1.wav");
+	precache_sound ("shambler/melee2.wav");
+	precache_sound ("shambler/smack.wav");
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
 //

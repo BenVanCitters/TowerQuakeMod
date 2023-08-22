@@ -52,6 +52,7 @@ void(vector org, entity tow_owner) monster_tow_enforcer;
 void(vector org, entity tow_owner) monster_tow_ogre;
 void(vector org, entity tow_owner) monster_tow_hell_knight;
 void(vector org, entity tow_owner) monster_tow_shalrath;
+void(vector org, entity tow_owner) monster_tow_shambler;
 void(vector) spawn_tfog;
 void(entity tower) upgradeTower = 
 {
@@ -73,7 +74,7 @@ void(entity tower) upgradeTower =
 	}
 	else if(tower.tower_upgrade_level == 5 ) //"vore -> shambler")
 	{
-		monster_tow_enforcer(tower.origin, tower.tower_owner);		
+		monster_tow_shambler(tower.origin, tower.tower_owner);		
 	}
 	spawn_tfog(tower.origin);
 	T_Damage(tower, tower, tower, 10000);
