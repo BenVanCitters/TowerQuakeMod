@@ -560,10 +560,15 @@ float WORLDTYPE_BASE = 2;
 
 .entity		oldenemy;		// mad at this player before taking damage
 
+//TOWER Entity defs
+.float		next_respawn;
 .float		respawn_wait;
 .entity		tower_owner;	// who created this 'tower'
 .float		tower_upgrade_points; //points towards the next level
 .float		tower_upgrade_level; //current upgrade level
+.float 		button0DownStart; //for measuring how long the 0 button is held down
+.float		isDroppingTower;
+
 .float		speed;
 
 .float	lefty;

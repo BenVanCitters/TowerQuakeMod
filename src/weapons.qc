@@ -50,6 +50,15 @@ float() crandom =
 
 .entity staticReticule;
 
+void() hideReticuleTower=
+{
+	if( self.staticReticule )
+	{
+		// erase the model 
+		setmodel(self.staticReticule, "");
+	}
+}
+
 // We already have a valid trace for this new spawn
 vector() getSpawnPosForCollision =
 {
@@ -63,10 +72,10 @@ void() drawTowerUnderReticule=
 {
 	makevectors (self.v_angle);
 	local vector source = self.origin + '0 0 16';
-	
 	local vector end = source + v_forward*200;
 	traceline (source, end, FALSE, self);
-	local float traceDist = vlen(source- end);
+	
+	local float traceDist = vlen(source - trace_endpos);
 	if( !self.staticReticule )
 	{
 		self.staticReticule = spawn();
@@ -88,7 +97,8 @@ void() drawTowerUnderReticule=
 	else
 	{
 		// erase the model 
-		setmodel(self.staticReticule, "");
+		hideReticuleTower();
+		
 	}
 }
 
@@ -155,23 +165,28 @@ void() W_FireAxe =
 
 	
 	org = trace_endpos - v_forward*4;
-	if (trace_ent.takedamage && trace_ent.tower_owner == self)
+	if(!self.isDroppingTower)
 	{
-		trace_ent.tower_upgrade_points += 1; 
-		tower_checkUpgrade(trace_ent);
-		sound (self, CHAN_WEAPON, "items/armor1.wav", 1, ATTN_NORM);
-	}
-	else if (trace_ent.takedamage)
-	{
-		trace_ent.axhitme = 1;
-		SpawnBlood (org, '0 0 0', 20);
-		T_Damage (trace_ent, self, self, 20);
+		if (trace_ent.takedamage && trace_ent.tower_owner == self)
+		{
+			trace_ent.tower_upgrade_points += 1; 
+			tower_checkUpgrade(trace_ent);
+			sound (self, CHAN_WEAPON, "items/armor1.wav", 1, ATTN_NORM);
+		}
+		else if (trace_ent.takedamage)
+		{
+			trace_ent.axhitme = 1;
+			SpawnBlood (org, '0 0 0', 20);
+			T_Damage (trace_ent, self, self, 20);
+		}
 	}
 	else
 	{	
 		local vector end = source + v_forward*200;
 		traceline (source, end, FALSE, self);
+		
 		local float traceDist = vlen(source - end);
+		
 		if (trace_fraction < 1.0 && traceDist > 50 )
 		{
 			local vector spawnPos = getSpawnPosForCollision();
@@ -1013,7 +1028,7 @@ void()	player_nail1;
 void()	player_light1;
 void()	player_rocket1;
 
-void() W_Attack =
+void() W_Attack_old =
 {
 	local	float	r;
 
@@ -1083,6 +1098,40 @@ void() W_Attack =
 		self.attack_finished = time + 0.1;
 		sound (self, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 		//stuffcmd (self, "vibrate tactile/weapons/lstart.bnvib");
+	}
+};
+
+void() W_Attack =
+{
+	local	float	r;
+
+	if ( W_HasNoAmmo() ) {
+		return;
+	}
+	
+	makevectors	(self.v_angle);		// calculate forward angle for velocity
+	self.show_hostile = time + 1;	// wake monsters up
+	
+	// [NDS] haleyjd: record player attacked
+	if (self.weapon != IT_AXE)
+	{
+		self.fired_weapon = 1;
+	}
+
+	if (self.weapon == IT_AXE)
+	{
+		sound (self, CHAN_WEAPON, "weapons/ax1.wav", 1, ATTN_NORM);
+		//stuffcmd (self, "vibrate tactile/weapons/ax1.bnvib");
+		r = random();
+		if (r < 0.25)
+			player_axe1 ();
+		else if (r<0.5)
+			player_axeb1 ();
+		else if (r<0.75)
+			player_axec1 ();
+		else
+			player_axed1 ();
+		self.attack_finished = time + 0.5;
 	}
 };
 
@@ -1424,6 +1473,51 @@ void() ImpulseCommands =
 	self.impulse = 0;
 };
 
+void() W_WeaponFrame =
+{
+	local float previousAttackFinished = time >= self.attack_finished ;
+	//if you are pressing fire button
+	if ( self.button0 ) 
+	{
+		//if the 
+		if(self.button0DownStart > 0)
+		{
+			//held down button
+			if(time - self.button0DownStart > .2)
+			{		
+				if ( previousAttackFinished ) 
+				{
+					drawTowerUnderReticule();
+				}
+			}
+		}
+		else
+		{
+			self.button0DownStart = time;
+		}
+	}
+	else //release
+	{
+		if(self.button0DownStart > 0)
+		{
+			if ( previousAttackFinished ) 
+			{
+				self.isDroppingTower = (time - self.button0DownStart > .2);
+				
+				SuperDamageSound ();
+				W_Attack ();					
+			}
+		}
+		hideReticuleTower();
+		//relased the button so reset the start time
+		self.button0DownStart = -1;
+	}
+
+
+	if (self.impulse)
+		ImpulseCommands ();
+	
+};
 
 /*
 ============
@@ -1432,10 +1526,10 @@ W_WeaponFrame
 Called every frame so impulse events can be handled as well as possible
 ============
 */
-void() W_WeaponFrame =
+void() W_WeaponFrame_old =
 {
 	
-	drawTowerUnderReticule();
+	//drawTowerUnderReticule();
 	if ( time < self.attack_finished ) {
 		return;
 	}

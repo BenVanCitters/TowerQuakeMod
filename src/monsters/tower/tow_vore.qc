@@ -269,5 +269,6 @@ void(vector org, entity tow_owner) monster_tow_shalrath =
 	tower.combat_style = CS_RANGED;
 
 
+	sound (tower, CHAN_VOICE, tower.noise, 1, ATTN_NORM);
 	turret_monster_init (tower);
 };

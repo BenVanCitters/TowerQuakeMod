@@ -247,12 +247,12 @@ void()	tow_run_tmp = {
 /*QUAKED monster_army (1 0 0) (-16 -16 -24) (16 16 40) Ambush*/
 void(vector org, entity tow_owner) monster_tow_army =
 {	
+
 	bprint("spawning tower army for ");
 	bprint(tow_owner.netname );
 	bprint("\n");
 	
 	local entity tower = spawn();
-	
 	tower.angles = vectoangles(aim(self, 1000));
 	tower.angles_x =0;
 	tower.angles_y =0;
@@ -284,5 +284,6 @@ void(vector org, entity tow_owner) monster_tow_army =
 	tower.allowPathFind = TRUE;
 	tower.combat_style = CS_RANGED;
 	
+	sound (tower, CHAN_VOICE, "soldier/sight1.wav", 1, ATTN_NORM);
 	turret_monster_init (tower);
 };

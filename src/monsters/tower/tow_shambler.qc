@@ -427,5 +427,6 @@ void(vector org, entity tow_owner) monster_tow_shambler =
 	tower.frags = 0;
 	
 	
+	sound (tower, CHAN_VOICE, tower.noise, 1, ATTN_NORM);
 	turret_monster_init (tower);
 };

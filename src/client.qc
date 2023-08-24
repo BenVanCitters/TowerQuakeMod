@@ -702,6 +702,7 @@ void() PutClientInServer =
 	local	entity spot;
 
 	self.classname = "player";
+	self.button0DownStart = -1;
 	if (skill == 3 && !deathmatch)
 		self.health = 50;
 	else
