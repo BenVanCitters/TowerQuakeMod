@@ -253,9 +253,10 @@ void(vector org, entity tow_owner) monster_tow_army =
 	bprint("\n");
 	
 	local entity tower = spawn();
-	tower.angles = vectoangles(aim(self, 1000));
-	tower.angles_x =0;
-	tower.angles_y =0;
+
+	local vector myAngle = tow_owner.v_angle;
+	myAngle_x = myAngle_z = 0; // zero out the x and z rotations		
+	tower.angles = myAngle;
 	
 	
 	tower.tower_upgrade_points = 0;
