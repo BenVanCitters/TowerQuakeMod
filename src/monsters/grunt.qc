@@ -288,8 +288,8 @@ void() army_die =
 
 void(entity myEntity) monster_army_spawn =
 {
-	bprint("printing new grunt: \n");
-	eprint(myEntity);
+	//bprint("printing new grunt: \n");
+	//eprint(myEntity);
 	myEntity.classname = "	";
 	//if there is something at the spawn don't do anything...
 	traceline(myEntity.origin - '0 1 0', myEntity.origin + '0 1 0', FALSE, self);

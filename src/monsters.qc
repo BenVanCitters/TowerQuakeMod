@@ -136,14 +136,14 @@ void() walkmonster_start_go =
 	{
 		local entity localclient = find(world, classname, "player");// checkclient ();
 		
-		bprint("I'm a ");
-		bprint(self.classname);
-		bprint(" and my check client was a ");
-		bprint(localclient.classname);
-		bprint(" der der der\n");
+		//bprint("I'm a ");
+		//bprint(self.classname);
+		//bprint(" and my check client was a ");
+		//bprint(localclient.classname);
+		//bprint(" der der der\n");
 		if(localclient.classname == "player")
 		{
-			bprint("walking to 'client'\n");
+			//bprint("walking to 'client'\n");
 			self.goalentity = self.movetarget = localclient;
 			self.ideal_yaw = vectoyaw(self.goalentity.origin - self.origin);
 			self.th_walk ();

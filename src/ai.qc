@@ -397,6 +397,21 @@ float(entity thisEnt) GetChainLength =
 	//bprint("\n");
 	return funcresult;
 }
+void(entity start) bPrintChain=
+{
+	//list
+	local entity temp  = start;
+	bprint("'");
+	while(temp)
+	{
+		//bprint("head classname: " );
+		bprint(temp.classname);
+		bprint("' > '");
+		temp = temp.chain;
+	}
+	bprint(temp.classname);
+	bprint("'\n");	
+}
 /*
 ===========
 FindTarget
@@ -446,7 +461,10 @@ float() FindTarget =
 
 
 	local float countEnem = GetChainLength(viableNextEnemies);
-	
+	//if( !(viableNextEnemies.flags & FL_MONSTER) && countEnem > 0)
+	//{
+	//	bPrintChain(viableNextEnemies);
+	//}
 	local entity head = viableNextEnemies;
 	if( testEntityForTarget(client) )
 	{
@@ -477,7 +495,7 @@ float() FindTarget =
 		return FALSE;
 	if(!head)
 		return FALSE;
-	if(countEnem > 0)
+	if(FALSE && countEnem > 0)
 	{
 		bprint("count: " );
 		bprint(ftos(countEnem));
@@ -489,8 +507,12 @@ float() FindTarget =
 		
 		bprint("head classname: " );
 		bprint(head.classname);
+		bprint(" -- ");
+		
+		bprint("start was classname: " );
+		bprint(viableNextEnemies.classname);
 		bprint("\n");
-		eprint(head);
+		//eprint(head);
 	}
 
 	//
