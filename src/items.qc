@@ -1479,5 +1479,9 @@ void() DropBackpack =
 	item.touch = BackpackTouch;
 	
 	item.nextthink = time + 120;    // remove after 2 minutes
+	if(self.flags & FL_MONSTER)
+	{
+		item.nextthink = time + 20; //monster backpacks last less
+	}
 	item.think = SUB_Remove;
 };

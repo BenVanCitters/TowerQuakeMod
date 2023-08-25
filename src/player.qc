@@ -552,6 +552,9 @@ void(string gibname, float dm) ThrowHead =
 	self.origin_z = self.origin_z - 24;
 	self.flags = self.flags - (self.flags & FL_ONGROUND);
 	self.avelocity = crandom() * '0 600 0';
+	
+	self.think = SUB_Remove;
+	self.nextthink = time + 20 + random()*20;
 };
 
 void() GibPlayer =
