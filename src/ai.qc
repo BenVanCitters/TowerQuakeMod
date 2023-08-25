@@ -325,16 +325,17 @@ float(entity thisEnt) testEntityForTarget
 }
 
 // prooduce a 'chain' based list of potentially viable towers for a monster ('self' is the monster)
+//returns the start of a ".chain"ed list (terminated by chain = world; ex: head->chain->chain->world)
 entity() GetViableTowerTargets =
 {
-	local entity viableNextEnemies;
-	local entity lastEnemy;
+	local entity viableNextEnemies = world;
+	local entity lastEnemy = world;
 	local float entCount = 0;
 	
 	//look for turrets!
 	local entity head;
 	head = findradius(self.origin, 1001);
-	viableNextEnemies = lastEnemy = head;
+	//viableNextEnemies = head;
 	
 	while (head)
 	{
@@ -355,12 +356,20 @@ entity() GetViableTowerTargets =
 		
 		//r = range (head);
 		//local float isInRange = (r != RANGE_FAR);
-		local float canSeeTarget = visible (head);
-		
-		if( isMonster && isAlive && !isSelf && isTurret && isMonster && isAlive && canSeeTarget && testEntityForTarget(head) )
+		//local float canSeeTarget = visible (head);
+		local float test = testEntityForTarget(head) ;
+		if( isMonster && isAlive && !isSelf && isTurret && isMonster && test )
 		{
+			//found a viable turrent!
 			//bprint("spotted a turret!!\n");
-			lastEnemy.chain = head;
+			if(lastEnemy)
+			{ 
+				lastEnemy.chain = head; 
+			}
+			if(!viableNextEnemies)
+			{
+				viableNextEnemies = head;
+			}
 			lastEnemy = head;			
 			entCount = entCount + 1;
 		}
@@ -369,13 +378,14 @@ entity() GetViableTowerTargets =
 	if(entCount < 1)
 		return world;
 	//bprint("\n");
+	//zero out end link
 	lastEnemy.chain = world;
 	return viableNextEnemies;
 }
 
 entity(entity thisEnt) GetLastEntityInChain =
 {
-	while (thisEnt.chain)
+	while( thisEnt.chain )
 	{
 		thisEnt = thisEnt.chain;
 	}
@@ -440,8 +450,7 @@ float() FindTarget =
 // spawn flag prior to the ambush flag, and I forgot about it, so the second
 // spawn flag works as well
 
-	local entity viableNextEnemies = GetViableTowerTargets();
-	local entity lastEnemy = GetLastEntityInChain(viableNextEnemies);
+
 
 	if (sight_entity_time >= time - 0.1 && !(self.spawnflags & 3) )
 	{
@@ -459,7 +468,9 @@ float() FindTarget =
 		}
 	}
 
-
+	//look for turrets
+	local entity viableNextEnemies = GetViableTowerTargets();
+	local entity lastEnemy = GetLastEntityInChain(viableNextEnemies);
 	local float countEnem = GetChainLength(viableNextEnemies);
 	//if( !(viableNextEnemies.flags & FL_MONSTER) && countEnem > 0)
 	//{
