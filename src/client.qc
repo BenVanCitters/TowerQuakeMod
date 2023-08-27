@@ -92,7 +92,7 @@ void() SetChangeParms =
 
 void() SetNewParms =
 {
-	parm1 = IT_SHOTGUN | IT_AXE;
+	parm1 =  IT_AXE;
 	if (skill == 3 && !deathmatch)
 		parm2 = 50;
 	else
