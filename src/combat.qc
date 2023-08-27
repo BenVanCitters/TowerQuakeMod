@@ -107,6 +107,10 @@ void(entity targ, entity attacker) Killed =
 	{
 		killed_monsters = killed_monsters + 1;
 		WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
+		if( attacker.tower_owner.classname == "player")
+		{
+			attacker.tower_owner.frags = attacker.tower_owner.frags + 1;
+		}
 		if (attacker.classname == "player")
 		{
 			attacker.frags = attacker.frags + 1;

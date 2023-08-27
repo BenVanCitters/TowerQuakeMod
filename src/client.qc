@@ -1691,6 +1691,10 @@ void(entity targ, entity attacker) ClientObituary =
 			}
 			return;
 		}
+		else if(attacker.tower_owner.classname == "player")
+		{
+			attacker.tower_owner.frags = attacker.tower_owner.frags + 1;
+		}
 		else
 		{
 			targ.frags = targ.frags - 1;		// killed self
