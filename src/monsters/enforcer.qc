@@ -340,14 +340,8 @@ void() enf_die =
 
 
 /*QUAKED monster_enforcer (1 0 0) (-16 -16 -24) (16 16 40) Ambush*/
-void() monster_enforcer =
+void() monster_enforcer_precache =
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-	
 	precache_model2 ("progs/enforcer.mdl");
 	precache_model2 ("progs/h_mega.mdl");
 	precache_model2 ("progs/laser.mdl");
@@ -361,32 +355,42 @@ void() monster_enforcer =
 	precache_sound2 ("enforcer/sight1.wav");
 	precache_sound2 ("enforcer/sight2.wav");
 	precache_sound2 ("enforcer/sight3.wav");
-	precache_sound2 ("enforcer/sight4.wav");
-	
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
-
-	setmodel (self, "progs/enforcer.mdl");
-
-	self.netname = "$qc_enforcer";
-	self.killstring = "$qc_ks_enforcer";
-	self.noise = "enforcer/sight1.wav";
-	self.noise1 = "enforcer/sight2.wav";
-	self.noise2 = "enforcer/sight3.wav";
-	self.noise3 = "enforcer/sight4.wav";
-
-	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 80;
-	self.max_health = 80;
-
-	self.th_stand = enf_stand1;
-	self.th_walk = enf_walk1;
-	self.th_run = enf_run1;
-	self.th_pain = enf_pain;
-	self.th_die = enf_die;
-	self.th_missile = enf_atk1;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_RANGED;
-
-	walkmonster_start();
+	precache_sound2 ("enforcer/sight4.wav");	
 };
+
+void(entity myEntity) monster_enforcer_spawn =
+{
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
+
+	setmodel (myEntity, "progs/enforcer.mdl");
+
+	myEntity.netname = "$qc_enforcer";
+	myEntity.killstring = "$qc_ks_enforcer";
+	myEntity.noise = "enforcer/sight1.wav";
+	myEntity.noise1 = "enforcer/sight2.wav";
+	myEntity.noise2 = "enforcer/sight3.wav";
+	myEntity.noise3 = "enforcer/sight4.wav";
+
+	setsize (myEntity, '-16 -16 -24', '16 16 40');
+	myEntity.health = 80;
+	myEntity.max_health = 80;
+
+	myEntity.th_stand = enf_stand1;
+	myEntity.th_walk = enf_walk1;
+	myEntity.th_run = enf_run1;
+	myEntity.th_pain = enf_pain;
+	myEntity.th_die = enf_die;
+	myEntity.th_missile = enf_atk1;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_RANGED;
+};
+
+void() monster_enforcer =
+{	
+	self.respawn_wait = 10;
+	self.monster_respawn = monster_enforcer_spawn;
+	self.monster_precaches = monster_enforcer_precache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
+}

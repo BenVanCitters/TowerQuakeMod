@@ -345,13 +345,9 @@ float()	DogCheckAttack =
 //===========================================================================
 
 /*QUAKED monster_dog (1 0 0) (-32 -32 -24) (32 32 40) Ambush*/
-void() monster_dog =
+
+void() dog_precache=
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
 	precache_model ("progs/h_dog.mdl");
 	precache_model ("progs/dog.mdl");
 
@@ -359,30 +355,41 @@ void() monster_dog =
 	precache_sound ("dog/ddeath.wav");
 	precache_sound ("dog/dpain1.wav");
 	precache_sound ("dog/dsight.wav");
-	precache_sound ("dog/idle.wav");
+	precache_sound ("dog/idle.wav");	
+};
 
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
+void(entity myEntity) monster_dog_spawn =
+{
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 
-	setmodel (self, "progs/dog.mdl");
+	setmodel (myEntity, "progs/dog.mdl");
 
-	self.noise = "dog/dsight.wav";	
-	self.netname = "$qc_rottweiler";
-	self.killstring = "$qc_ks_rottweiler";
+	myEntity.noise = "dog/dsight.wav";	
+	myEntity.netname = "$qc_rottweiler";
+	myEntity.killstring = "$qc_ks_rottweiler";
 
-	setsize (self, '-32 -32 -24', '32 32 40');
-	self.health = 25;
-	self.max_health = 25;
+	setsize (myEntity, '-32 -32 -24', '32 32 40');
+	myEntity.health = 25;
+	myEntity.max_health = 25;
 
-	self.th_stand = dog_stand1;
-	self.th_walk = dog_walk1;
-	self.th_run = dog_run1;
-	self.th_pain = dog_pain;
-	self.th_die = dog_die;
-	self.th_melee = dog_atta1;
-	self.th_missile = dog_leap1;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_MELEE;
+	myEntity.th_stand = dog_stand1;
+	myEntity.th_walk = dog_walk1;
+	myEntity.th_run = dog_run1;
+	myEntity.th_pain = dog_pain;
+	myEntity.th_die = dog_die;
+	myEntity.th_melee = dog_atta1;
+	myEntity.th_missile = dog_leap1;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_MELEE;
 
-	walkmonster_start();
+};
+
+void() monster_dog =
+{
+	self.respawn_wait = 3;
+	self.monster_respawn = monster_dog_spawn;
+	self.monster_precaches = dog_precache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
 };

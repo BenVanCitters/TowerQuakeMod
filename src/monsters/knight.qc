@@ -249,14 +249,8 @@ void() knight_die =
 /*
 QUAKED monster_knight (1 0 0) (-16 -16 -24) (16 16 40) Ambush
 */
-void() monster_knight =
+void() kight_precache=
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-
 	precache_model ("progs/knight.mdl");
 	precache_model ("progs/h_knight.mdl");
 
@@ -266,28 +260,38 @@ void() monster_knight =
 	precache_sound ("knight/sword1.wav");
 	precache_sound ("knight/sword2.wav");
 	precache_sound ("knight/idle.wav");
+}
 
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
+void(entity myEntity) monster_knight_spawn =
+{
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 
-	setmodel (self, "progs/knight.mdl");
+	setmodel (myEntity, "progs/knight.mdl");
 
-	self.noise = "knight/ksight.wav";
-	self.netname = "$qc_knight";
-	self.killstring = "$qc_ks_knight";
+	myEntity.noise = "knight/ksight.wav";
+	myEntity.netname = "$qc_knight";
+	myEntity.killstring = "$qc_ks_knight";
 
-	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 75;
-	self.max_health = 75;
+	setsize (myEntity, '-16 -16 -24', '16 16 40');
+	myEntity.health = 75;
+	myEntity.max_health = 75;
 
-	self.th_stand = knight_stand1;
-	self.th_walk = knight_walk1;
-	self.th_run = knight_run1;
-	self.th_melee = knight_atk1;
-	self.th_pain = knight_pain;
-	self.th_die = knight_die;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_MELEE;
-	
-	walkmonster_start ();
+	myEntity.th_stand = knight_stand1;
+	myEntity.th_walk = knight_walk1;
+	myEntity.th_run = knight_run1;
+	myEntity.th_melee = knight_atk1;
+	myEntity.th_pain = knight_pain;
+	myEntity.th_die = knight_die;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_MELEE;
 };
+
+void() monster_knight =
+{
+	self.respawn_wait = 5;
+	self.monster_respawn = monster_knight_spawn;
+	self.monster_precaches = kight_precache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
+}

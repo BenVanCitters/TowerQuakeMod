@@ -8,6 +8,7 @@ ai.qc
 combat.qc
 itemnames.qc
 items.qc
+towers.qc
 weapons.qc
 world.qc
 in_world_hud.qc
@@ -19,6 +20,7 @@ buttons.qc
 triggers.qc
 plats.qc
 misc.qc
+tower_monster.qc
 
 monsters/ogre.qc
 monsters/fiend.qc
@@ -44,9 +46,6 @@ monsters/tower/tow_hellknight.qc
 monsters/tower/tow_vore.qc
 monsters/tower/tow_shambler.qc
 
-
-
-monsters/tower.qc
 
 
 bots/bot.qc				// bot support

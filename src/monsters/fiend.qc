@@ -201,15 +201,9 @@ void() Demon_MeleeAttack =
 	demon1_atta1 ();
 };
 
-
-/*QUAKED monster_demon1 (1 0 0) (-32 -32 -24) (32 32 64) Ambush*/
-void() monster_demon1 =
+void() demon_cache=
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
+	
 	precache_model ("progs/demon.mdl");
 	precache_model ("progs/h_demon.mdl");
 
@@ -219,33 +213,45 @@ void() monster_demon1 =
 	precache_sound ("demon/dpain1.wav");
 	precache_sound ("demon/idle1.wav");
 	precache_sound ("demon/sight2.wav");
+}
 
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
+/*QUAKED monster_demon1 (1 0 0) (-32 -32 -24) (32 32 64) Ambush*/
+void(entity myEntity) monster_demon1_spawn =
+{
 
-	setmodel (self, "progs/demon.mdl");
-	self.noise = "demon/sight2.wav";
-	self.killstring = "$qc_ks_fiend";
 
-	self.netname = "$qc_fiend";
-	setsize (self, VEC_HULL2_MIN, VEC_HULL2_MAX);
-	self.health = 300;
-	self.max_health = 300;
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 
-	self.th_stand = demon1_stand1;
-	self.th_walk = demon1_walk1;
-	self.th_run = demon1_run1;
-	self.th_die = demon_die;
-	self.th_melee = Demon_MeleeAttack;		// one of two attacks
-	self.th_missile = demon1_jump1;			// jump attack
-	self.th_pain = demon1_pain;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_MELEE;
+	setmodel (myEntity, "progs/demon.mdl");
+	myEntity.noise = "demon/sight2.wav";
+	myEntity.killstring = "$qc_ks_fiend";
+
+	myEntity.netname = "$qc_fiend";
+	setsize (myEntity, VEC_HULL2_MIN, VEC_HULL2_MAX);
+	myEntity.health = 300;
+	myEntity.max_health = 300;
+
+	myEntity.th_stand = demon1_stand1;
+	myEntity.th_walk = demon1_walk1;
+	myEntity.th_run = demon1_run1;
+	myEntity.th_die = demon_die;
+	myEntity.th_melee = Demon_MeleeAttack;		// one of two attacks
+	myEntity.th_missile = demon1_jump1;			// jump attack
+	myEntity.th_pain = demon1_pain;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_MELEE;
 		
-	walkmonster_start();
 };
 
-
+void() monster_demon1 =
+{
+	self.respawn_wait = 15;
+	self.monster_respawn = monster_demon1_spawn;
+	self.monster_precaches = demon_cache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
+};
 /*
 ==============================================================================
 

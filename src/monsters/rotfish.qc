@@ -179,40 +179,48 @@ void(entity attacker, float damage)	fish_pain =
 /*
 QUAKED monster_fish (1 0 0) (-16 -16 -24) (16 16 24) Ambush
 */
-void() monster_fish =
+
+
+void() fish_cache=
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-	
 	precache_model2 ("progs/fish.mdl");
 
 	precache_sound2 ("fish/death.wav");
 	precache_sound2 ("fish/bite.wav");
 	precache_sound2 ("fish/idle.wav");
+}
+void(entity myEntity) monster_fish_spawn =
+{
 
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
 
-	setmodel (self, "progs/fish.mdl");
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 
-	self.netname = "$qc_rotfish";
-	self.noise = "fish/idle.wav";
-	self.killstring = "$qc_ks_rotfish";
+	setmodel (myEntity, "progs/fish.mdl");
 
-	setsize (self, '-16 -16 -24', '16 16 24');
-	self.health = 25;
-	self.max_health = 25;
+	myEntity.netname = "$qc_rotfish";
+	myEntity.noise = "fish/idle.wav";
+	myEntity.killstring = "$qc_ks_rotfish";
+
+	setsize (myEntity, '-16 -16 -24', '16 16 24');
+	myEntity.health = 25;
+	myEntity.max_health = 25;
 	
-	self.th_stand = f_stand1;
-	self.th_walk = f_walk1;
-	self.th_run = f_run1;
-	self.th_die = f_death1;
-	self.th_pain = fish_pain;
-	self.th_melee = f_attack1;
-	
-	swimmonster_start ();
+	myEntity.th_stand = f_stand1;
+	myEntity.th_walk = f_walk1;
+	myEntity.th_run = f_run1;
+	myEntity.th_die = f_death1;
+	myEntity.th_pain = fish_pain;
+	myEntity.th_melee = f_attack1;
 };
 
+
+void() monster_fish =
+{
+	self.respawn_wait = 5;
+	self.monster_respawn = monster_fish_spawn;
+	self.monster_precaches = fish_cache;
+	self.monster_init_ai = swimmonster_start;
+	kickoffMonster();
+
+};

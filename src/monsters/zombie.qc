@@ -492,14 +492,9 @@ void(entity attacker, float take) zombie_pain =
 
 If crucified, stick the bounding box 12 pixels back into a wall to look right.
 */
-void() monster_zombie =
-{
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
 
+void() precache_zom=
+{
 	precache_model ("progs/zombie.mdl");
 	precache_model ("progs/h_zombie.mdl");
 	precache_model ("progs/zom_gib.mdl");
@@ -513,35 +508,55 @@ void() monster_zombie =
 	precache_sound ("zombie/z_fall.wav");
 	precache_sound ("zombie/z_miss.wav");
 	precache_sound ("zombie/z_hit.wav");
-	precache_sound ("zombie/idle_w2.wav");
+	precache_sound ("zombie/idle_w2.wav");	
+};
 
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
+void(entity myEntity) monster_zombie_spawn =
+{
 
-	setmodel (self, "progs/zombie.mdl");
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 
-	self.noise = "zombie/z_idle.wav";
-	self.netname = "$qc_zombie";
-	self.killstring = "$qc_ks_zombie";
+	setmodel (myEntity, "progs/zombie.mdl");
 
-	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 60;
-	self.max_health = 60;
+	myEntity.noise = "zombie/z_idle.wav";
+	myEntity.netname = "$qc_zombie";
+	myEntity.killstring = "$qc_ks_zombie";
 
-	self.th_stand = zombie_stand1;
-	self.th_walk = zombie_walk1;
-	self.th_run = zombie_run1;
-	self.th_pain = zombie_pain;
-	self.th_die = zombie_die;
-	self.th_missile = zombie_missile;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_RANGED;
+	setsize (myEntity, '-16 -16 -24', '16 16 40');
+	myEntity.health = 60;
+	myEntity.max_health = 60;
 
+	myEntity.th_stand = zombie_stand1;
+	myEntity.th_walk = zombie_walk1;
+	myEntity.th_run = zombie_run1;
+	myEntity.th_pain = zombie_pain;
+	myEntity.th_die = zombie_die;
+	myEntity.th_missile = zombie_missile;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_RANGED;
+	
+};
+
+void() monster_zombie =
+{
+	
+	
 	if (self.spawnflags & SPAWN_CRUCIFIED)
 	{
+		precache_zom();
+		monster_zombie_spawn(self);
+		
 		self.movetype = MOVETYPE_NONE;
-		zombie_cruc1 ();
+		zombie_cruc1();
 	}
 	else
-		walkmonster_start();
+	{
+		self.monster_respawn = monster_zombie_spawn;
+		self.monster_init_ai = walkmonster_start;
+		self.respawn_wait = 25;
+		self.monster_precaches = precache_zom;
+		kickoffMonster();
+	}
+	
 };

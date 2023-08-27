@@ -488,14 +488,8 @@ void() ogre_melee =
 /*QUAKED monster_ogre (1 0 0) (-32 -32 -24) (32 32 64) Ambush
 
 */
-void() monster_ogre =
+void() ogre_precache=
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-
 	precache_model ("progs/ogre.mdl");
 	precache_model ("progs/h_ogre.mdl");
 	precache_model ("progs/grenade.mdl");
@@ -507,32 +501,44 @@ void() monster_ogre =
 	precache_sound ("ogre/ogpain1.wav");
 	precache_sound ("ogre/ogsawatk.wav");
 	precache_sound ("ogre/ogwake.wav");
+}
 
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
+void(entity myEntity) monster_ogre_spawn =
+{
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 
-	setmodel (self, "progs/ogre.mdl");
+	setmodel (myEntity, "progs/ogre.mdl");
 
-	self.noise = "ogre/ogwake.wav";
-	self.netname = "$qc_ogre";
-	self.killstring = "$qc_ks_ogre";
+	myEntity.noise = "ogre/ogwake.wav";
+	myEntity.netname = "$qc_ogre";
+	myEntity.killstring = "$qc_ks_ogre";
 
-	setsize (self, VEC_HULL2_MIN, VEC_HULL2_MAX);
-	self.health = 200;
-	self.max_health = 200;
+	setsize (myEntity, VEC_HULL2_MIN, VEC_HULL2_MAX);
+	myEntity.health = 200;
+	myEntity.max_health = 200;
 
-	self.th_stand = ogre_stand1;
-	self.th_walk = ogre_walk1;
-	self.th_run = ogre_run1;
-	self.th_die = ogre_die;
-	self.th_melee = ogre_melee;
-	self.th_missile = ogre_nail1;
-	self.th_pain = ogre_pain;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_MIXED;
+	myEntity.th_stand = ogre_stand1;
+	myEntity.th_walk = ogre_walk1;
+	myEntity.th_run = ogre_run1;
+	myEntity.th_die = ogre_die;
+	myEntity.th_melee = ogre_melee;
+	myEntity.th_missile = ogre_nail1;
+	myEntity.th_pain = ogre_pain;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_MIXED;
 	
-	walkmonster_start();
 };
+
+void() monster_ogre =
+{	
+	self.respawn_wait = 5;
+	self.monster_respawn = monster_ogre_spawn;
+	self.monster_precaches = ogre_precache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
+
+}
 
 void() monster_ogre_marksman =
 {

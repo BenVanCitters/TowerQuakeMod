@@ -382,14 +382,9 @@ void() sham_die =
 
 /*QUAKED monster_shambler (1 0 0) (-32 -32 -24) (32 32 64) Ambush
 */
-void() monster_shambler =
+void() sham_cache=
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-
+	
 	precache_model ("progs/shambler.mdl");
 	precache_model ("progs/s_light.mdl");
 	precache_model ("progs/h_shams.mdl");
@@ -404,32 +399,44 @@ void() monster_shambler =
 	precache_sound ("shambler/melee1.wav");
 	precache_sound ("shambler/melee2.wav");
 	precache_sound ("shambler/smack.wav");
+}
+void(entity myEntity) monster_shambler_spawn =
+{
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
+	setmodel (myEntity, "progs/shambler.mdl");
 
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
-	setmodel (self, "progs/shambler.mdl");
+	myEntity.noise = "shambler/ssight.wav";
+	myEntity.netname = "$qc_shambler";
+	myEntity.killstring = "$qc_ks_shambler";
+
+
+	setsize (myEntity, VEC_HULL2_MIN, VEC_HULL2_MAX);
+	myEntity.health = 600;
+	myEntity.max_health = 600;
+
+	myEntity.th_stand = sham_stand1;
+	myEntity.th_walk = sham_walk1;
+	myEntity.th_run = sham_run1;
+	myEntity.th_die = sham_die;
+	myEntity.th_melee = sham_melee;
+	myEntity.th_missile = sham_magic1;
+	myEntity.th_pain = sham_pain;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_MIXED;
+
+	// overload frags for lightning attack counts
+	myEntity.frags = 0;
 	
-	self.noise = "shambler/ssight.wav";
-	self.netname = "$qc_shambler";
-	self.killstring = "$qc_ks_shambler";
-
-
-	setsize (self, VEC_HULL2_MIN, VEC_HULL2_MAX);
-	self.health = 600;
-	self.max_health = 600;
-
-	self.th_stand = sham_stand1;
-	self.th_walk = sham_walk1;
-	self.th_run = sham_run1;
-	self.th_die = sham_die;
-	self.th_melee = sham_melee;
-	self.th_missile = sham_magic1;
-	self.th_pain = sham_pain;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_MIXED;
-
-    // overload frags for lightning attack counts
-    self.frags = 0;
-	
-	walkmonster_start();
 };
+
+void() monster_shambler =
+{
+	self.respawn_wait = 25;
+	self.monster_respawn = monster_shambler_spawn;
+	self.monster_precaches = sham_cache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
+	
+};
+

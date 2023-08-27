@@ -435,18 +435,11 @@ void() hknight_melee =
 };
 
 /*QUAKED monster_hell_knight (1 0 0) (-16 -16 -24) (16 16 40) Ambush*/
-void() monster_hell_knight =
+void() monster_hell_knight_precache =
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-
 	precache_model2 ("progs/hknight.mdl");
 	precache_model2 ("progs/k_spike.mdl");
 	precache_model2 ("progs/h_hellkn.mdl");
-
 	
 	precache_sound2 ("hknight/attack1.wav");
 	precache_sound2 ("hknight/death1.wav");
@@ -459,29 +452,41 @@ void() monster_hell_knight =
 
 	precache_sound ("knight/sword1.wav");
 	precache_sound ("knight/sword2.wav");
+}
+
+void(entity myEntity) monster_hell_knight_spawn =
+{
 	
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 
-	setmodel (self, "progs/hknight.mdl");
+	setmodel (myEntity, "progs/hknight.mdl");
 
-	self.noise = "hknight/sight1.wav";
-	self.netname = "$qc_death_knight";
-	self.killstring = "$qc_ks_deathknight";
+	myEntity.noise = "hknight/sight1.wav";
+	myEntity.netname = "$qc_death_knight";
+	myEntity.killstring = "$qc_ks_deathknight";
 
-	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 250;
-	self.max_health = 250;
+	setsize (myEntity, '-16 -16 -24', '16 16 40');
+	myEntity.health = 250;
+	myEntity.max_health = 250;
 
-	self.th_stand = hknight_stand1;
-	self.th_walk = hknight_walk1;
-	self.th_run = hknight_run1;
-	self.th_melee = hknight_melee;
-	self.th_missile = hknight_magicc1;
-	self.th_pain = hknight_pain;
-	self.th_die = hknight_die;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_MIXED;
+	myEntity.th_stand = hknight_stand1;
+	myEntity.th_walk = hknight_walk1;
+	myEntity.th_run = hknight_run1;
+	myEntity.th_melee = hknight_melee;
+	myEntity.th_missile = hknight_magicc1;
+	myEntity.th_pain = hknight_pain;
+	myEntity.th_die = hknight_die;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_MIXED;
 	
-	walkmonster_start ();
 };
+
+void() monster_hell_knight =
+{
+	self.respawn_wait = 10;
+	self.monster_respawn = monster_hell_knight_spawn;
+	self.monster_precaches = monster_hell_knight_precache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
+}

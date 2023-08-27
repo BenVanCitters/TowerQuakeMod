@@ -289,14 +289,8 @@ void() army_die =
 
 void(entity myEntity) monster_army_spawn =
 {
-	//bprint("printing new grunt: \n");
-	//eprint(myEntity);
 	myEntity.classname = "	";
-	//if there is something at the spawn don't do anything...
-	traceline(myEntity.origin - '0 1 0', myEntity.origin + '0 1 0', FALSE, self);
-	if(trace_ent != world)
-		return;
-		
+
 	setorigin (myEntity, myEntity.origin);
 
 	myEntity.solid = SOLID_SLIDEBOX;
@@ -320,34 +314,13 @@ void(entity myEntity) monster_army_spawn =
 	myEntity.th_die = army_die;
 	myEntity.allowPathFind = TRUE;
 	myEntity.combat_style = CS_RANGED;
-	//instead of just calling 'walkmonsterstart' we use 'think' to properly set self
-	myEntity.think = walkmonster_start;
-	myEntity.nextthink = 0.1;
+		//instead of just calling 'walkmonsterstart' we use 'think' to properly set self
+		//myEntity.think = walkmonster_start;
+		//myEntity.nextthink = time + 0.1;
 };
 
-void() newArmySpawn =
+void() armyPrecache=
 {
-	local entity new_enemy = spawn();
-	//copy origin and angles in from the map entity settings
-	new_enemy.origin = self.origin;
-	new_enemy.angles = self.angles;
-	monster_army_spawn(new_enemy);
-	
-	self.think = newArmySpawn;
-	self.nextthink = time + self.respawn_wait;
-	//.float		next_respawn;
-	//.float		respawn_wait;
-}
-
-/*QUAKED monster_army (1 0 0) (-16 -16 -24) (16 16 40) Ambush*/
-void() monster_army =
-{	
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-	
 	precache_model ("progs/soldier.mdl");
 	precache_model ("progs/h_guard.mdl");
 	precache_model ("progs/gib1.mdl");
@@ -362,14 +335,14 @@ void() monster_army =
 	precache_sound ("soldier/sight1.wav");
 
 	precache_sound ("player/udeath.wav");		// gib death
-	
-	self.respawn_wait = 5;
-	
-	local entity monster_spawner = spawn();
-	monster_spawner.respawn_wait = self.respawn_wait;
-	monster_spawner.origin = self.origin;
-	monster_spawner.angles = self.angles;
-	monster_spawner.think = newArmySpawn;
-	monster_spawner.nextthink = time + 0.1;
-	monster_army_spawn(self);
 }
+
+/*QUAKED monster_army (1 0 0) (-16 -16 -24) (16 16 40) Ambush*/
+void() monster_army =
+{	
+	self.respawn_wait = 5;
+	self.monster_respawn = monster_army_spawn;
+	self.monster_precaches = armyPrecache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
+};

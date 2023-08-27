@@ -201,43 +201,51 @@ void()	tbaby_die2	=[	$exp,		tbaby_run1	] {
 
 /*QUAKED monster_tarbaby (1 0 0) (-16 -16 -24) (16 16 24) Ambush
 */
-void() monster_tarbaby =
+
+void() tarbaby_precache =
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-	
 	precache_model2 ("progs/tarbaby.mdl");
 
 	precache_sound2 ("blob/death1.wav");
 	precache_sound2 ("blob/hit1.wav");
 	precache_sound2 ("blob/land1.wav");
 	precache_sound2 ("blob/sight1.wav");
+}
+
+
+void(entity myEntity) monster_tarbaby_spawn =
+{
 	
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 
-	setmodel (self, "progs/tarbaby.mdl");
+	setmodel (myEntity, "progs/tarbaby.mdl");
 
-	self.noise = "blob/sight1.wav";
-	self.netname = "$qc_spawn";
-	self.killstring = "$qc_ks_spawn";
+	myEntity.noise = "blob/sight1.wav";
+	myEntity.netname = "$qc_spawn";
+	myEntity.killstring = "$qc_ks_spawn";
 
-	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 80;
-	self.max_health = 80;
+	setsize (myEntity, '-16 -16 -24', '16 16 40');
+	myEntity.health = 80;
+	myEntity.max_health = 80;
 
-	self.th_stand = tbaby_stand1;
-	self.th_walk = tbaby_walk1;
-	self.th_run = tbaby_run1;
-	self.th_missile = tbaby_jump1;
-	self.th_melee = tbaby_jump1;
-	self.th_die = tbaby_die1;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_MELEE;
+	myEntity.th_stand = tbaby_stand1;
+	myEntity.th_walk = tbaby_walk1;
+	myEntity.th_run = tbaby_run1;
+	myEntity.th_missile = tbaby_jump1;
+	myEntity.th_melee = tbaby_jump1;
+	myEntity.th_die = tbaby_die1;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_MELEE;
 	
-	walkmonster_start ();
+};
+
+void() monster_tarbaby =
+{
+	self.respawn_wait = 35;
+	self.monster_respawn = monster_tarbaby_spawn;
+	self.monster_precaches = tarbaby_precache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
 };
 

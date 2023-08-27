@@ -231,13 +231,10 @@ void() ShalMissileTouch =
 
 /*QUAKED monster_shalrath (1 0 0) (-32 -32 -24) (32 32 48) Ambush
 */
-void() monster_shalrath =
+
+void() shalrath_precache=
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
+	
 
 	precache_model2 ("progs/shalrath.mdl");
 	precache_model2 ("progs/h_shal.mdl");
@@ -249,30 +246,39 @@ void() monster_shalrath =
 	precache_sound2 ("shalrath/idle.wav");
 	precache_sound2 ("shalrath/pain.wav");
 	precache_sound2 ("shalrath/sight.wav");
+};
+
+void(entity myEntity) monster_shalrath_spawn =
+{
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 	
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
-	
-	setmodel (self, "progs/shalrath.mdl");
+	setmodel (myEntity, "progs/shalrath.mdl");
 
-	self.noise = "shalrath/sight.wav";
-	self.netname = "$qc_vore";
-	self.killstring = "$qc_ks_vore";
+	myEntity.noise = "shalrath/sight.wav";
+	myEntity.netname = "$qc_vore";
+	myEntity.killstring = "$qc_ks_vore";
 
-	setsize (self, VEC_HULL2_MIN, VEC_HULL2_MAX);
-	self.health = 400;
-	self.max_health = 400;
+	setsize (myEntity, VEC_HULL2_MIN, VEC_HULL2_MAX);
+	myEntity.health = 400;
+	myEntity.max_health = 400;
 
-	self.th_stand = shal_stand;
-	self.th_walk = shal_walk1;
-	self.th_run = shal_run1;
-	self.th_die = shalrath_die;
-	self.th_pain = shalrath_pain;
-	self.th_missile = shal_attack1;
-	self.allowPathFind = TRUE;
-	self.combat_style = CS_RANGED;
+	myEntity.th_stand = shal_stand;
+	myEntity.th_walk = shal_walk1;
+	myEntity.th_run = shal_run1;
+	myEntity.th_die = shalrath_die;
+	myEntity.th_pain = shalrath_pain;
+	myEntity.th_missile = shal_attack1;
+	myEntity.allowPathFind = TRUE;
+	myEntity.combat_style = CS_RANGED;
 
-	self.think = walkmonster_start;
-	self.nextthink = time + 0.1 + random () * 0.1;	
+};
 
+void() monster_shalrath =
+{
+	self.respawn_wait = 35;
+	self.monster_respawn = monster_shalrath_spawn;
+	self.monster_precaches = shalrath_precache;
+	self.monster_init_ai = walkmonster_start;
+	kickoffMonster();
 };

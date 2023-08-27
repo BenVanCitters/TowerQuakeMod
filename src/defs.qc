@@ -568,6 +568,10 @@ float WORLDTYPE_BASE = 2;
 .float		tower_upgrade_level; //current upgrade level
 .float 		button0DownStart; //for measuring how long the 0 button is held down
 .float		isDroppingTower;
+.void(entity myEntity)		monster_respawn;
+.void()		monster_precaches;
+.void()		monster_init_ai;
+
 
 .float		speed;
 

@@ -410,15 +410,8 @@ void() Wiz_Missile =
 /*
 QUAKED monster_wizard (1 0 0) (-16 -16 -24) (16 16 40) Ambush
 */
-
-void() monster_wizard =
+void() scrag_cache=
 {
-	if (deathmatch)
-	{
-		remove(self);
-		return;
-	}
-	
 	precache_model ("progs/wizard.mdl");
 	precache_model ("progs/h_wizard.mdl");
 	precache_model ("progs/w_spike.mdl");
@@ -430,27 +423,39 @@ void() monster_wizard =
 	precache_sound ("wizard/widle2.wav");
 	precache_sound ("wizard/wpain.wav");
 	precache_sound ("wizard/wsight.wav");
+}
 
-	self.solid = SOLID_SLIDEBOX;
-	self.movetype = MOVETYPE_STEP;
+void(entity myEntity) monster_wizard_spawn =
+{
+	myEntity.solid = SOLID_SLIDEBOX;
+	myEntity.movetype = MOVETYPE_STEP;
 
-	setmodel (self, "progs/wizard.mdl");
+	setmodel (myEntity, "progs/wizard.mdl");
 
-	self.noise = "wizard/wsight.wav";
-	self.netname = "$qc_scrag";
-	self.killstring = "$qc_ks_scrag";
+	myEntity.noise = "wizard/wsight.wav";
+	myEntity.netname = "$qc_scrag";
+	myEntity.killstring = "$qc_ks_scrag";
 
-	setsize (self, '-16 -16 -24', '16 16 40');
-	self.health = 80;
-	self.max_health = 80;
+	setsize (myEntity, '-16 -16 -24', '16 16 40');
+	myEntity.health = 80;
+	myEntity.max_health = 80;
 
-	self.th_stand = wiz_stand1;
-	self.th_walk = wiz_walk1;
-	self.th_run = wiz_run1;
-	self.th_missile = Wiz_Missile;
-	self.th_pain = Wiz_Pain;
-	self.th_die = wiz_die;
-	self.combat_style = CS_RANGED;
+	myEntity.th_stand = wiz_stand1;
+	myEntity.th_walk = wiz_walk1;
+	myEntity.th_run = wiz_run1;
+	myEntity.th_missile = Wiz_Missile;
+	myEntity.th_pain = Wiz_Pain;
+	myEntity.th_die = wiz_die;
+	myEntity.combat_style = CS_RANGED;
 		
-	flymonster_start ();
+};
+
+void() monster_wizard =
+{
+	self.respawn_wait = 15;
+	self.monster_respawn = monster_wizard_spawn;
+	self.monster_precaches = scrag_cache;
+	self.monster_init_ai = flymonster_start;
+	kickoffMonster();
+	
 };
