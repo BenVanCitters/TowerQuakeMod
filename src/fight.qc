@@ -373,6 +373,7 @@ float() OgreCheckAttack =
 	local vector	spot1, spot2;	
 	local entity	targ;
 	local float		chance;
+	//bprint("OgreCheckAttack!\n");
 
 	if (enemy_range == RANGE_MELEE)
 	{

@@ -399,7 +399,7 @@ void()	tow_ogre_die10	=[	$death10,	tow_ogre_die11	] {};
 void()	tow_ogre_die11	=[	$death11,	tow_ogre_die12	] {};
 void()	tow_ogre_die12	=[	$death12,	tow_ogre_die13	] {};
 void()	tow_ogre_die13	=[	$death13,	tow_ogre_die14	] {};
-void()	tow_ogre_die14	=[	$death14,	tow_ogre_die14	] {};
+void()	tow_ogre_die14	=[	$death14,	deathRemove	] {};
 
 void()	tow_ogre_bdie1	=[	$bdeath1,	tow_ogre_bdie2	] {};
 void()	tow_ogre_bdie2	=[	$bdeath2,	tow_ogre_bdie3	] {};
@@ -415,7 +415,7 @@ void()	tow_ogre_bdie6	=[	$bdeath6,	tow_ogre_bdie7	] {};
 void()	tow_ogre_bdie7	=[	$bdeath7,	tow_ogre_bdie8	] {};
 void()	tow_ogre_bdie8	=[	$bdeath8,	tow_ogre_bdie9	] {};
 void()	tow_ogre_bdie9	=[	$bdeath9,	tow_ogre_bdie10	] {};
-void()	tow_ogre_bdie10	=[	$bdeath10,	tow_ogre_bdie10	] {};
+void()	tow_ogre_bdie10	=[	$bdeath10,	deathRemove	] {};
 
 void() tow_ogre_die =
 {
@@ -472,7 +472,7 @@ void(vector org, entity tow_owner) monster_tow_ogre =
 	tower.netname = "$qc_ogre";
 	tower.killstring = "$qc_ks_ogre";
 
-	setsize (tower, VEC_HULL2_MIN, VEC_HULL2_MAX);
+	setsize (tower, '-16 -16 -24', '16 16 40');
 
 
 	setorigin (tower, org + '0 0 50');

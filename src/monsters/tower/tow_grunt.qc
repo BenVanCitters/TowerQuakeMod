@@ -197,7 +197,7 @@ void()	tow_army_die6	=[	$death6,	tow_army_die7	] {};
 void()	tow_army_die7	=[	$death7,	tow_army_die8	] {};
 void()	tow_army_die8	=[	$death8,	tow_army_die9	] {};
 void()	tow_army_die9	=[	$death9,	tow_army_die10	] {};
-void()	tow_army_die10	=[	$death10,	tow_army_die10	] {};
+void()	tow_army_die10	=[	$death10,	deathRemove	] {};
 
 void()	tow_army_cdie1	=[	$deathc1,	tow_army_cdie2	] {};
 void()	tow_army_cdie2	=[	$deathc2,	tow_army_cdie3	] {};
@@ -214,7 +214,7 @@ void()	tow_army_cdie7	=[	$deathc7,	tow_army_cdie8	] {};
 void()	tow_army_cdie8	=[	$deathc8,	tow_army_cdie9	] {};
 void()	tow_army_cdie9	=[	$deathc9,	tow_army_cdie10	] {};
 void()	tow_army_cdie10	=[	$deathc10,	tow_army_cdie11	] {};
-void()	tow_army_cdie11	=[	$deathc11,	tow_army_cdie11	] {};
+void()	tow_army_cdie11	=[	$deathc11,	deathRemove	] {};
 
 
 void() tow_army_die =

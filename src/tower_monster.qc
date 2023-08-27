@@ -53,4 +53,6 @@ void() kickoffMonster =
 	self.think = self.monster_init_ai;
 	self.nextthink = time + 0.1;
 }
+
+//function to remove bodies from the game after a while
 void()	deathRemove = { self.think = SUB_Remove; self.nextthink = time + 10 + random()*10;};

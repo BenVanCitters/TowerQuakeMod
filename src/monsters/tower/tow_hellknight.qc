@@ -188,7 +188,7 @@ void()	tow_hknight_die8	=[	$death8,	tow_hknight_die9	] { };
 void()	tow_hknight_die9	=[	$death9,	tow_hknight_die10	] { };
 void()	tow_hknight_die10	=[	$death10,	tow_hknight_die11	] {};
 void()	tow_hknight_die11	=[	$death11,	tow_hknight_die12	] {};
-void()	tow_hknight_die12	=[	$death12,	tow_hknight_die12	] {};
+void()	tow_hknight_die12	=[	$death12,	deathRemove	] {};
 
 void()	tow_hknight_dieb1	=[	$deathb1,	tow_hknight_dieb2	] {};
 void()	tow_hknight_dieb2	=[	$deathb2,	tow_hknight_dieb3	] {};
@@ -198,7 +198,7 @@ void()	tow_hknight_dieb5	=[	$deathb5,	tow_hknight_dieb6	] {};
 void()	tow_hknight_dieb6	=[	$deathb6,	tow_hknight_dieb7	] {};
 void()	tow_hknight_dieb7	=[	$deathb7,	tow_hknight_dieb8	] {};
 void()	tow_hknight_dieb8	=[	$deathb8,	tow_hknight_dieb9	] {};
-void()	tow_hknight_dieb9	=[	$deathb9,	tow_hknight_dieb9	] {};
+void()	tow_hknight_dieb9	=[	$deathb9,	deathRemove	] {};
 
 void() tow_hknight_die =
 {

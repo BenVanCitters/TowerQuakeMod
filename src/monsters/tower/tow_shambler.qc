@@ -357,7 +357,7 @@ void() tow_sham_death7      =[      $death7,       tow_sham_death8     ] {};
 void() tow_sham_death8      =[      $death8,       tow_sham_death9     ] {};
 void() tow_sham_death9      =[      $death9,       tow_sham_death10    ] {};
 void() tow_sham_death10     =[      $death10,      tow_sham_death11    ] {};
-void() tow_sham_death11     =[      $death11,      tow_sham_death11    ] {};
+void() tow_sham_death11     =[      $death11,      deathRemove    ] {};
 
 void() tow_sham_die =
 {
@@ -409,7 +409,7 @@ void(vector org, entity tow_owner) monster_tow_shambler =
 	tower.killstring = "$qc_ks_shambler";
 
 
-	setsize (tower, VEC_HULL2_MIN, VEC_HULL2_MAX);
+	setsize (tower, '-16 -16 -24', '16 16 40');
 	tower.health = 600;
 	tower.max_health = 600;
 

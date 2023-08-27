@@ -109,7 +109,7 @@ void() tow_shal_death3      =[      $death3,        tow_shal_death4     ] {};
 void() tow_shal_death4      =[      $death4,        tow_shal_death5     ] {};
 void() tow_shal_death5      =[      $death5,        tow_shal_death6     ] {};
 void() tow_shal_death6      =[      $death6,        tow_shal_death7     ] {};
-void() tow_shal_death7      =[      $death7,        tow_shal_death7    ] {};
+void() tow_shal_death7      =[      $death7,        deathRemove    ] {};
 
 
 void(entity attacker, float damage) tow_shalrath_pain =
@@ -255,7 +255,7 @@ void(vector org, entity tow_owner) monster_tow_shalrath =
 	tower.netname = "$qc_vore";
 	tower.killstring = "$qc_ks_vore";
 
-	setsize (tower, VEC_HULL2_MIN, VEC_HULL2_MAX);
+	setsize (tower, '-16 -16 -24', '16 16 40');
 	tower.health = 400;
 	tower.max_health = 400;
 

@@ -296,7 +296,7 @@ void()	tow_enf_die10	=[	$death10,	tow_enf_die11	] {ai_forward(5);};
 void()	tow_enf_die11	=[	$death11,	tow_enf_die12	] {ai_forward(5);};
 void()	tow_enf_die12	=[	$death12,	tow_enf_die13	] {ai_forward(5);};
 void()	tow_enf_die13	=[	$death13,	tow_enf_die14	] {};
-void()	tow_enf_die14	=[	$death14,	tow_enf_die14	] {};
+void()	tow_enf_die14	=[	$death14,	deathRemove	] {};
 
 void()	tow_enf_fdie1	=[	$fdeath1,	tow_enf_fdie2	] {};
 void()	tow_enf_fdie2	=[	$fdeath2,	tow_enf_fdie3	] {};
@@ -313,7 +313,7 @@ void()	tow_enf_fdie7	=[	$fdeath7,	tow_enf_fdie8	] {};
 void()	tow_enf_fdie8	=[	$fdeath8,	tow_enf_fdie9	] {};
 void()	tow_enf_fdie9	=[	$fdeath9,	tow_enf_fdie10	] {};
 void()	tow_enf_fdie10	=[	$fdeath10,	tow_enf_fdie11	] {};
-void()	tow_enf_fdie11	=[	$fdeath11,	tow_enf_fdie11	] {};
+void()	tow_enf_fdie11	=[	$fdeath11,	deathRemove	] {};
 
 
 void() tow_enf_die =

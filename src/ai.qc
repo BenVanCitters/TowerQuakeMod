@@ -589,7 +589,7 @@ void() FindTowerTarget =
 				//draw_line(head.origin, self.origin, 192, 5, TRUE);
 				if ( isVisibleToTurret && isInRange && canSeeTarget ) //&&  ( infront (head) )
 				{							
-					draw_line(head.origin, self.origin, 244, 15, TRUE);
+					//draw_line(head.origin, self.origin, 244, 15, TRUE);
 					//
 					// got one
 					//
