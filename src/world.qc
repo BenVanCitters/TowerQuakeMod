@@ -316,6 +316,7 @@ void() worldspawn =
 	//precaches for towers
 	precache_sound ("items/armor1.wav");
 	precache_model ("progs/m_s_key.mdl");
+	precache_model ("progs/invulner.mdl");
 	
 	//soldier/grunt
 	precache_model ("progs/soldier.mdl");

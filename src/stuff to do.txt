@@ -1,12 +1,12 @@
 bugs
 ====
-health upgrade status - isn't always aligned - doesn't always show everything
+graphic health upgrade status - isn't always aligned - doesn't always show everything
 axe should upgrade if close, build tower if held and pointing at ground, attack if hit enemy
-can drop monsters too close together; up inside walls
 make sure melee attacks work for ogre, shambler, hellknight
 prevent monsters from spawning when far away
 fish don't swim to player before sight
 vores can't seem to handle two grunts...
+prevent monsters attacking each other
 
 more features
 ===============
@@ -21,3 +21,4 @@ graphical differentiation for monsters, towers, enemy towers
 maybe upgrading a tower should pause the tower briefly - more of a penalty
 maybe towers shouldn't be ready right away - slow down how fast they can be made
 reverse gib explosions?
+monster mgr - prevent too many monsters, 

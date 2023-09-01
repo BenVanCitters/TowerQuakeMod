@@ -66,11 +66,13 @@ void() W_FireAxe =
 	org = trace_endpos - v_forward*4;
 	local entity upgradeOrInjureEnt = trace_ent;
 	
+	
+	local vector spawnPos = getSpawnPosForSelf();
+	
 	local vector end = source + v_forward*200;
 	traceline (source, end, FALSE, self);
 	
 	
-	local vector spawnPos = getSpawnPosForSelf();
 	local float traceDist = vlen(source - spawnPos);
 			
 	// 80 is approx the length of the diagonal of a tower bounding box
@@ -96,12 +98,9 @@ void() W_FireAxe =
 	}
 	else
 	{	
-		
-		
 
 		if (validRangeToDropTower ) 
 		{
-
 			monster_tow_army( spawnPos , self );
 		
 			sound (self, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
@@ -813,6 +812,8 @@ void() ImpulseCommands =
 void() W_WeaponFrame =
 {
 	local float previousAttackFinished = time >= self.attack_finished ;
+	
+	hideReticuleTower();
 	//if you are pressing fire button
 	if ( self.button0 ) 
 	{

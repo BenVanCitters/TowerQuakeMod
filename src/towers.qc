@@ -119,20 +119,22 @@ void() drawTowerUnderReticule=
 	}
 	if (trace_fraction < 1.0 && traceDist > 60 )
 	{
+		//show the tower if valid placement
 		setmodel (self.staticReticule, "progs/soldier.mdl"); //show the model
 		
 		local vector myAngle = self.v_angle;
 		myAngle_x = myAngle_z = 0; // zero out the x and z rotations		
 		self.staticReticule.angles = myAngle;
-		
-		local vector spawnPos = getSpawnPosForSelf();
+				
 		setorigin(self.staticReticule, spawnPos);
 	}
 	else
 	{
-		// erase the model 
-		hideReticuleTower();
-		
+		//show 'invalid' indicator
+		end = source + v_forward*10000;
+		traceline (source, end, FALSE, self);
+		setmodel (self.staticReticule, "progs/invulner.mdl"); //show the model
+		setorigin(self.staticReticule, trace_endpos);
 	}
 }
 
