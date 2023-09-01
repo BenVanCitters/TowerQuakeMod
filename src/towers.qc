@@ -14,13 +14,89 @@ void() hideReticuleTower=
 	}
 }
 
-// We already have a valid trace for this new spawn
-vector() getSpawnPosForCollision =
+float(vector start, vector end) getTraceDist=
 {
-	local vector verticalOffset = VEC_HULL_MIN;
-	verticalOffset_x = 0;
-	verticalOffset_y = 0;
-	return (trace_endpos - verticalOffset);
+	traceline( start, end, FALSE, self);
+	return vlen( trace_endpos - start );
+}
+
+// We already have a valid trace for this new spawn - self should be the player
+vector() getSpawnPosForSelf =
+{
+	local vector minsz = '-16 -16 -24';
+	local vector maxsz = '16 16 40';
+	
+	// cube corners f/b front back l/u lower upper, l/r left right
+	local vector ful, fll, fur, flr, bul, bll, bur, blr;
+	
+	makevectors (self.v_angle);
+	local vector source = self.origin + '0 0 36'; //36 hels align the tower to the reticule
+	local vector end = source + v_forward*2000 ;
+	
+	ful_x = minsz_x; ful_y = maxsz_y; ful_z = maxsz_z;
+	fll_x = minsz_x; fll_y = maxsz_y; fll_z = minsz_z;
+	fur = maxsz;
+	flr_x = maxsz_x; flr_y = maxsz_y; flr_z = minsz_z;
+	
+	bul_x = minsz_x; bul_y = minsz_y; bul_z = maxsz_z;
+	bll = minsz;
+	bur_x = maxsz_x; bur_y = minsz_y; bur_z = maxsz_z;
+	blr_x = maxsz_x; blr_y = minsz_y; blr_z = minsz_z;
+	
+	//draw_line( source+ful, end+ful, 255, .2, TRUE);
+	//draw_line( source+fll, end+fll, 255, .2, TRUE);
+	//draw_line( source+fur, end+fur, 255, .2, TRUE);
+	//draw_line( source+flr, end+flr, 255, .2, TRUE);
+	
+	//draw_line( source+bul, end+bul, 255, .2, TRUE);
+	//draw_line( source+bll, end+bll, 255, .2, TRUE);
+	//draw_line( source+bur, end+bur, 255, .2, TRUE);
+	//draw_line( source+blr, end+blr, 255, .2, TRUE);
+	
+	//project forward each vertex of the AABB and store the deets for the 
+	// shortest projection
+	local float minDist = 9999999999;
+	local vector minOffset;
+	local vector minNormal;
+	local float curDist;
+	curDist = getTraceDist( source+ful, end+ful);
+	if(curDist < minDist) { minDist = curDist; minOffset = ful; minNormal = trace_plane_normal;}
+	curDist = getTraceDist( source+fll, end+fll);
+	if(curDist < minDist) { minDist = curDist; minOffset = fll; minNormal = trace_plane_normal; }
+	curDist = getTraceDist( source+fur, end+fur);
+	if(curDist < minDist) { minDist = curDist; minOffset = fur; minNormal = trace_plane_normal; }
+	curDist = getTraceDist( source+flr, end+flr);
+	if(curDist < minDist) { minDist = curDist; minOffset = flr; minNormal = trace_plane_normal; }
+	
+	curDist = getTraceDist( source+bul, end+bul);
+	if(curDist < minDist) { minDist = curDist; minOffset = bul; minNormal = trace_plane_normal; }
+	curDist = getTraceDist( source+bll, end+bll);
+	if(curDist < minDist) { minDist = curDist; minOffset = bll; minNormal = trace_plane_normal; }
+	curDist = getTraceDist( source+bur, end+bur);
+	if(curDist < minDist) { minDist = curDist; minOffset = bur; minNormal = trace_plane_normal; }
+	curDist = getTraceDist( source+blr, end+blr);
+	if(curDist < minDist) { minDist = curDist; minOffset = blr; minNormal = trace_plane_normal; }
+	
+	local vector myorg = source + v_forward*minDist;
+	//draw_bounds(myorg + minsz, myorg + maxsz, 79, .2, TRUE);
+	
+	//if we are on a wall...
+	traceline(myorg + '0 0 1' , myorg +'0 0 -1000',TRUE, self);
+	local float dot_prod = trace_plane_normal * minNormal;
+	if(dot_prod < .3)
+	{
+		myorg = trace_endpos;// drop to ground
+		myorg_z = myorg_z - minsz_z; //push up
+	}
+	
+	return myorg;
+}
+
+float(vector spawnPos, vector traceStart, float traceFraction) isTowerSpawnPosValid=
+{
+	local float traceDist = vlen(traceStart - spawnPos);
+	
+	return (traceFraction < 1.0 && traceDist > 50 );
 }
 
 void() drawTowerUnderReticule=
@@ -28,9 +104,12 @@ void() drawTowerUnderReticule=
 	makevectors (self.v_angle);
 	local vector source = self.origin + '0 0 16';
 	local vector end = source + v_forward*200;
+	local vector spawnPos = getSpawnPosForSelf();
+	
 	traceline (source, end, FALSE, self);
 	
-	local float traceDist = vlen(source - trace_endpos);
+	
+	local float traceDist = vlen(source - spawnPos);
 	if( !self.staticReticule )
 	{
 		self.staticReticule = spawn();
@@ -38,15 +117,15 @@ void() drawTowerUnderReticule=
 		self.staticReticule.solid = SOLID_NOT;
 		self.staticReticule.alpha = .5;
 	}
-	if (trace_fraction < 1.0 && traceDist > 50 )
+	if (trace_fraction < 1.0 && traceDist > 60 )
 	{
 		setmodel (self.staticReticule, "progs/soldier.mdl"); //show the model
 		
 		local vector myAngle = self.v_angle;
 		myAngle_x = myAngle_z = 0; // zero out the x and z rotations		
 		self.staticReticule.angles = myAngle;
-
-		local vector spawnPos = getSpawnPosForCollision();
+		
+		local vector spawnPos = getSpawnPosForSelf();
 		setorigin(self.staticReticule, spawnPos);
 	}
 	else

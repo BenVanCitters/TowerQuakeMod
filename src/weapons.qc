@@ -62,33 +62,45 @@ void() W_FireAxe =
 	source = self.origin + '0 0 16';
 	traceline (source, source + v_forward*64, FALSE, self);
 
-	
+	local float validRangeToHurtOrUpgrade = trace_ent.takedamage != DAMAGE_NO;
 	org = trace_endpos - v_forward*4;
+	local entity upgradeOrInjureEnt = trace_ent;
+	
+	local vector end = source + v_forward*200;
+	traceline (source, end, FALSE, self);
+	
+	
+	local vector spawnPos = getSpawnPosForSelf();
+	local float traceDist = vlen(source - spawnPos);
+			
+	// 80 is approx the length of the diagonal of a tower bounding box
+	//closer than than and the player and tower may be inside each other
+	local float minPlacementDist = 60; 
+	
+	local float validRangeToDropTower = (trace_fraction < 1.0 && traceDist > minPlacementDist );
+	
 	if(!self.isDroppingTower)
 	{
-		if (trace_ent.takedamage && trace_ent.tower_owner == self)
+		if (upgradeOrInjureEnt.takedamage && upgradeOrInjureEnt.tower_owner == self)
 		{
-			trace_ent.tower_upgrade_points += 1; 
-			tower_checkUpgrade(trace_ent);
+			upgradeOrInjureEnt.tower_upgrade_points += 1; 
+			tower_checkUpgrade(upgradeOrInjureEnt);
 			sound (self, CHAN_WEAPON, "items/armor1.wav", 1, ATTN_NORM);
 		}
-		else if (trace_ent.takedamage)
+		else if (upgradeOrInjureEnt.takedamage)
 		{
-			trace_ent.axhitme = 1;
+			upgradeOrInjureEnt.axhitme = 1;
 			SpawnBlood (org, '0 0 0', 20);
-			T_Damage (trace_ent, self, self, 20);
+			T_Damage (upgradeOrInjureEnt, self, self, 20);
 		}
 	}
 	else
 	{	
-		local vector end = source + v_forward*200;
-		traceline (source, end, FALSE, self);
 		
-		local float traceDist = vlen(source - end);
 		
-		if (trace_fraction < 1.0 && traceDist > 50 )
+
+		if (validRangeToDropTower ) 
 		{
-			local vector spawnPos = getSpawnPosForCollision();
 
 			monster_tow_army( spawnPos , self );
 		
