@@ -282,8 +282,6 @@ void()	tow_enf_die1	=[	$death1,	tow_enf_die2	] {};
 void()	tow_enf_die2	=[	$death2,	tow_enf_die3	] {};
 void()	tow_enf_die3	=[	$death3,	tow_enf_die4	] {
 	self.solid = SOLID_NOT;
-	self.ammo_cells = 5;
-	DropBackpack();
 };
 
 void()	tow_enf_die4	=[	$death4,	tow_enf_die5	] {ai_forward(14);};
@@ -302,8 +300,6 @@ void()	tow_enf_fdie1	=[	$fdeath1,	tow_enf_fdie2	] {};
 void()	tow_enf_fdie2	=[	$fdeath2,	tow_enf_fdie3	] {};
 void()	tow_enf_fdie3	=[	$fdeath3,	tow_enf_fdie4	] {
 	self.solid = SOLID_NOT;
-	self.ammo_cells = 5;
-	DropBackpack();
 };
 
 void()	tow_enf_fdie4	=[	$fdeath4,	tow_enf_fdie5	] {};

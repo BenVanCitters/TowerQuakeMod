@@ -386,7 +386,6 @@ void()	tow_ogre_die1	=[	$death1,	tow_ogre_die2	] {};
 void()	tow_ogre_die2	=[	$death2,	tow_ogre_die3	] {};
 void()	tow_ogre_die3	=[	$death3,	tow_ogre_die4	] {
 	self.solid = SOLID_NOT;
-	self.ammo_rockets = 2;DropBackpack();
 };
 
 void()	tow_ogre_die4	=[	$death4,	tow_ogre_die5	] {};
@@ -405,8 +404,6 @@ void()	tow_ogre_bdie1	=[	$bdeath1,	tow_ogre_bdie2	] {};
 void()	tow_ogre_bdie2	=[	$bdeath2,	tow_ogre_bdie3	] {};
 void()	tow_ogre_bdie3	=[	$bdeath3,	tow_ogre_bdie4	] {
 	self.solid = SOLID_NOT;
-	self.ammo_rockets = 2;
-	DropBackpack();
 };
 
 void()	tow_ogre_bdie4	=[	$bdeath4,	tow_ogre_bdie5	] {};

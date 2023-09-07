@@ -187,8 +187,6 @@ void()	tow_army_die1	=[	$death1,	tow_army_die2	] {};
 void()	tow_army_die2	=[	$death2,	tow_army_die3	] {};
 void()	tow_army_die3	=[	$death3,	tow_army_die4	] {
 	self.solid = SOLID_NOT;
-	self.ammo_shells = 5;
-	DropBackpack();
 };
 
 void()	tow_army_die4	=[	$death4,	tow_army_die5	] {};
@@ -203,8 +201,6 @@ void()	tow_army_cdie1	=[	$deathc1,	tow_army_cdie2	] {};
 void()	tow_army_cdie2	=[	$deathc2,	tow_army_cdie3	] {};
 void()	tow_army_cdie3	=[	$deathc3,	tow_army_cdie4	] {
 	self.solid = SOLID_NOT;
-	self.ammo_shells = 5;
-	DropBackpack();
 };
 
 void()	tow_army_cdie4	=[	$deathc4,	tow_army_cdie5	] {};
@@ -240,10 +236,42 @@ void() tow_army_die =
 
 void()	tow_run_tmp = {
 	bprint("agh!\n");
-	self.ammo_shells = 5;
-	DropBackpack();
 	army_run1();
 };
+
+void() testNextEnt=
+{
+	local entity temp = self;
+	dprint("test\n");	
+	dprint("self-class: ");
+	dprint(self.classname);
+	dprint(", ");	
+		
+	temp = nextent(temp);
+	local float t = 0;
+	while(temp != self)
+	{	
+		if(temp.flags & FL_TOWER)
+		{
+			t = t + 1;
+			bprint("c[");
+			
+			bprint(ftos(t));
+			bprint("]: ");
+			bprint(temp.classname);
+			bprint(", ");	
+		}
+		temp = nextent(temp);	
+	}
+	bprint("\nlast-class: ");
+	bprint(temp.classname);
+	bprint("\n");
+	bprint("count: ");
+		
+	bprint(ftos(t));		
+	bprint("\n");	
+}
+
 /*QUAKED monster_army (1 0 0) (-16 -16 -24) (16 16 40) Ambush*/
 void(vector org, entity tow_owner) monster_tow_army =
 {	

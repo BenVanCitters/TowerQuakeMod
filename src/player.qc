@@ -596,8 +596,6 @@ void() PlayerDie =
 	self.effects = 0;
 	self.modelindex = modelindex_player;	// don't use eyes
 
-	if (deathmatch || coop)
-		DropBackpack();
 	
 	self.weaponmodel = string_null;
 	self.view_ofs = '0 0 -8';
