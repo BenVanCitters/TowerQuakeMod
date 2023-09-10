@@ -239,38 +239,6 @@ void()	tow_run_tmp = {
 	army_run1();
 };
 
-void() testNextEnt=
-{
-	local entity temp = self;
-	dprint("test\n");	
-	dprint("self-class: ");
-	dprint(self.classname);
-	dprint(", ");	
-		
-	temp = nextent(temp);
-	local float t = 0;
-	while(temp != self)
-	{	
-		if(temp.flags & FL_TOWER)
-		{
-			t = t + 1;
-			bprint("c[");
-			
-			bprint(ftos(t));
-			bprint("]: ");
-			bprint(temp.classname);
-			bprint(", ");	
-		}
-		temp = nextent(temp);	
-	}
-	bprint("\nlast-class: ");
-	bprint(temp.classname);
-	bprint("\n");
-	bprint("count: ");
-		
-	bprint(ftos(t));		
-	bprint("\n");	
-}
 
 /*QUAKED monster_army (1 0 0) (-16 -16 -24) (16 16 40) Ambush*/
 void(vector org, entity tow_owner) monster_tow_army =
