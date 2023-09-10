@@ -184,7 +184,7 @@ void (  ) turret_monster_think =
 	self.view_ofs = '0 0 25';
 	self.use = monster_use;
 	self.team = TEAM_MONSTERS;
-	self.flags = self.flags | FL_MONSTER;
+	self.flags = self.flags | FL_MONSTER | FL_TOWER;
 	
 	self.pausetime = 99999999;
 	self.th_stand ();

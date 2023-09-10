@@ -7,6 +7,7 @@ prevent monsters from spawning when far away
 fish don't swim to player before sight
 vores can't seem to handle two grunts...
 prevent monsters attacking each other
+placement indicator never goes away if button held at death
 
 more features
 ===============

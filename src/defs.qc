@@ -262,6 +262,7 @@ float 	FL_NO_PLAYERS			= 16384;	// mal: used by the spawn point editor
 float 	FL_NO_MONSTERS			= 32768;	// mal: used by the spawn point editor
 float   FL_NO_BOTS				= 65536;	// mal: any item marked with this will be ignored by bots.
 float 	FL_OBJECTIVE			= 131072; 	// mal: any item marked with this is an objective of some kind.
+float	FL_TOWER			= 262144;
 
 // edict.movetype values
 float	MOVETYPE_NONE			= 0;	// never moves
@@ -568,6 +569,9 @@ float WORLDTYPE_BASE = 2;
 .float		tower_upgrade_level; //current upgrade level
 .float 		button0DownStart; //for measuring how long the 0 button is held down
 .float		isDroppingTower;
+.entity		nextSpawner; //like .chain but for finding nearby spawners
+.float		distToPlayer;  // float for holding disatnce to the last player/bot
+
 .void(entity myEntity)		monster_respawn;
 .void()		monster_precaches;
 .void()		monster_init_ai;
