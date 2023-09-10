@@ -563,6 +563,7 @@ void() FindTowerTarget =
 	//bprint("firetowertarg\n");
 	
 	
+	local float lastEnemyDied = ((self.enemy != world) && (self.enemy.health <= 0) );
 	while (head)
 	{
 		local float isSelf = (self == head);
@@ -573,7 +574,6 @@ void() FindTowerTarget =
 		local float isTowerOwner = (self.tower_owner == head);
 		local float hasSameTowerOwner = (self.tower_owner == head.tower_owner);
 		local float isAlive = (head.solid != SOLID_NOT) && (head.health > 0);
-		local float lastEnemyDied = ((self.enemy != world) && (self.enemy.health <= 0) );
 		local float currentFriend = (head != self.enemy);
 		local float isVisibleToTurret = !(head.flags & FL_NOTARGET) && !(head.items & IT_INVISIBILITY) ;
 		r = range (head);
