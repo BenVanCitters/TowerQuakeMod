@@ -1234,7 +1234,7 @@ void() PlayerPreThink =
 		self.weapon = W_BestWeapon ();
 		W_SetCurrentAmmo ();
 	}
-	nearestSpawns();
+	nearestSpawns(self);
 	reticuleOver();// in_world_hud.qc
 };
 	

@@ -151,15 +151,94 @@ void(entity tower) showUpgradeStatus =
 		tower.upgrade4 = makeUpgradeIcon(tower, '15 0 50', 3);
 	}
 	
-}
-void(  ) nearestSpawns=
+};
+
+
+// inserts a spawn if it is closer than any of the existing spawners or there are less than 5 of them
+void(entity listOwner, entity insertEnt) insertSpawn =
 {
-	local entity temp = self;
+	local float entCount = 0;
+	local entity lastNode = listOwner;
+	local entity curNode = listOwner.nextSpawner;
+	local float inserted = FALSE;
+	//empty list case
+	if( listOwner.nextSpawner == world )
+	{
+		listOwner.nextSpawner = insertEnt;
+		insertEnt.nextSpawner = world;
+		return;
+	}
+
+	local float maxSpawnerCount = 5;
+	//walk the list and insert if less than anything, but only allow a max length
+	while( curNode != world && entCount < maxSpawnerCount)
+	{
+		//insert before
+		if( (curNode.distToPlayer > insertEnt.distToPlayer) && !inserted )
+		{
+			lastNode.nextSpawner = insertEnt;
+			insertEnt.nextSpawner = curNode;
+			inserted = TRUE;
+			
+		}
+		lastNode = curNode;
+		curNode = curNode.nextSpawner;
+		entCount= entCount + 1;
+	}
+
+	//iterated whole list but list isn't too long yet..
+	if(entCount < maxSpawnerCount  && !inserted )
+	{
+		lastNode.nextSpawner = insertEnt;
+		//lastNode = lastNode.nextSpawner;
+		insertEnt.nextSpawner = world;
+	}
+	else
+	{
+		//curNode is now 'world' or if not then the list is too long
+		lastNode.nextSpawner = world;
+	}
+}
+
+void(entity listOwner) printSpawnList =
+{
+	local float entCount = 0;
+	local entity curNode = listOwner.nextSpawner;
+	bprint(listOwner.classname);
+	bprint("'s spawnlist: (");
+
+	//empty list case
+	if(listOwner.nextSpawner == world)
+	{
+		bprint("Empty!");
+	}
+
+	//walk the list and insert if less than anything, but only allow a length of 5
+	while( curNode != world && entCount < 5)
+	{
+		bprint("Ent[");
+		bprint(ftos(entCount));
+		bprint("]: ");
+		bprint(ftos(curNode.distToPlayer));
+		bprint(", ");
+		draw_line(listOwner.origin, curNode.origin, 192, 0.2, TRUE);	
+		curNode = curNode.nextSpawner;
+		
+		entCount= entCount + 1;
+	}
+	bprint(")\n");
+
+}
+
+void( entity playerEnt  ) nearestSpawns=
+{
+	playerEnt.nextSpawner = world;
+	local entity temp = playerEnt;
 
 	temp = nextent(temp);
 
 	local float t = 0;
-	while(temp != self)
+	while(temp != playerEnt)
 	{		
 	
 		// .nextSpawner; 
@@ -167,10 +246,17 @@ void(  ) nearestSpawns=
 		if(temp.classname == "monster_spawner")
 		{
 			t = t + 1;
-			draw_line(temp.origin, self.origin, 192, 0.2, TRUE);	
+			temp.distToPlayer = vlen( temp.origin - playerEnt.origin );
+			insertSpawn(playerEnt, temp);			
 		}
 		temp = nextent(temp);	
 	}
+	bprint("nearestspawn saw ");
+	bprint(ftos(t));
+	bprint(" monster spawners...\n");
+
+
+	printSpawnList(playerEnt);
 	
 	//local entity head = findradius(self.origin, 1000);
 	//local entity last = self;
@@ -181,7 +267,7 @@ void(  ) nearestSpawns=
 	//	head = head.chain;
 		
 	//}
-
+	
 }
 void() reticuleOver =
 {
