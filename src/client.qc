@@ -514,7 +514,7 @@ PlayerVisibleToSpawnPoint
 Returns true if player can see this point
 ============
 */
-float PlayerVisibleToSpawnPoint( entity point ) {
+float( entity point ) PlayerVisibleToSpawnPoint ={
 	local vector spot1, spot2;
 	local entity player = find( world, classname, "player" );
 	while ( player ) {
@@ -523,7 +523,8 @@ float PlayerVisibleToSpawnPoint( entity point ) {
 			spot2 = player.origin + player.view_ofs;
 
 			traceline( spot1, spot2, TRUE, point );
-			if ( trace_fraction >= 1.0f ) {
+			if ( trace_fraction >= 1.0 ) 
+			{
 				return TRUE;
 			}
 		}
@@ -544,7 +545,7 @@ SelectSpawnPoint
 Returns the entity to spawn at
 ============
 */
-entity SelectSpawnPoint(float forceSpawn) {
+entity(float forceSpawn) SelectSpawnPoint = {
 	local   entity spot, thing;
 	local   float   numspots, totalspots;
 	local   float   pcount;
@@ -1188,6 +1189,7 @@ PlayerPreThink
 Called every frame before physics are run
 ================
 */
+void(entity player) processMonsterManagerForPlayer;
 void() PlayerPreThink =
 {
 	if (intermission_running)
@@ -1234,7 +1236,7 @@ void() PlayerPreThink =
 		self.weapon = W_BestWeapon ();
 		W_SetCurrentAmmo ();
 	}
-	nearestSpawns(self);
+	processMonsterManagerForPlayer(self);
 	reticuleOver();// in_world_hud.qc
 };
 	
