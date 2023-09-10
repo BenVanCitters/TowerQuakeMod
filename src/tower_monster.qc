@@ -37,6 +37,8 @@ void() kickoffMonster =
 	
 	local entity monster_spawner = spawn();
 	
+	monster_spawner.classname = "monster_spawner";
+	
 	//assume these are set prior...
 	monster_spawner.respawn_wait = self.respawn_wait;
 	monster_spawner.origin = self.origin;
