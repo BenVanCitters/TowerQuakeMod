@@ -1,13 +1,18 @@
 //
 // monster stuff
 //
+void(entity monster) addLivingMonsterToManager;
+void(entity monster) removeLivingMonsterFromManager;
+entity() getMonsterManager;
+
 void(entity myEntity) nonRespawn={};
 
 void() newMonsterSpawn =
 {
+	local entity mgr = getMonsterManager();
 	//if there is something at the spawn don't do anything...
 	traceline(self.origin - '0 1 0', self.origin + '0 1 0', FALSE, self);
-	if(trace_ent == world)
+	if(trace_ent == world && (mgr.health < mgr.max_health) )
 	{
 		local entity new_enemy = spawn();
 		//copy origin and angles in from the map entity settings
@@ -15,14 +20,16 @@ void() newMonsterSpawn =
 		new_enemy.origin = self.origin;
 		new_enemy.angles = self.angles;	
 		self.monster_respawn(new_enemy);
-		
+
+		addLivingMonsterToManager(new_enemy);
 		//instead of just calling 'walkmonsterstart' we use 'think' to properly set self
 		new_enemy.think = self.monster_init_ai;
 		new_enemy.nextthink = time + 0.1;	
 	}	
 	
-	self.think = newMonsterSpawn;
-	self.nextthink = time + self.respawn_wait;
+	//self.think = newMonsterSpawn;
+	// self.nextthink = time + self.respawn_wait;
+	//manager sets the nextthink... 
 }
 
 void() kickoffMonster =
@@ -45,16 +52,29 @@ void() kickoffMonster =
 	monster_spawner.angles = self.angles;
 	
 	monster_spawner.think = newMonsterSpawn;
-	monster_spawner.nextthink = time + 0.1;
+	//monster_spawner.nextthink = time + 0.1;
 	
 	monster_spawner.monster_respawn = self.monster_respawn;
 	monster_spawner.monster_init_ai = self.monster_init_ai;
 	
-	monster_spawner.monster_respawn(self);
+	//monster_spawner.monster_respawn(self);
 	
 	self.think = self.monster_init_ai;
-	self.nextthink = time + 0.1;
-}
+	//self.nextthink = time + 0.1;
+};
+
+//recycle entity - decrement manager counter
+void() removeMonsterThink=
+{	
+	 
+	remove(self);
+};
 
 //function to remove bodies from the game after a while
-void()	deathRemove = { self.think = SUB_Remove; self.nextthink = time + 10 + random()*10;};
+//called on last death frame..
+void()	deathRemove = 
+{ 
+	removeLivingMonsterFromManager(self);
+	self.think = removeMonsterThink; 
+	self.nextthink = time + 10 + random()*10;
+};

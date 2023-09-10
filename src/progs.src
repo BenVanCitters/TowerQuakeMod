@@ -22,6 +22,7 @@ plats.qc
 misc.qc
 tower_monster.qc
 
+monsters/monster_manager.qc
 monsters/ogre.qc
 monsters/fiend.qc
 monsters/shambler.qc
