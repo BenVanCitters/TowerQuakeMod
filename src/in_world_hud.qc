@@ -152,7 +152,37 @@ void(entity tower) showUpgradeStatus =
 	}
 	
 }
+void(  ) nearestSpawns=
+{
+	local entity temp = self;
 
+	temp = nextent(temp);
+
+	local float t = 0;
+	while(temp != self)
+	{		
+	
+		// .nextSpawner; 
+		// .distToPlayer;
+		if(temp.classname == "monster_spawner")
+		{
+			t = t + 1;
+			draw_line(temp.origin, self.origin, 192, 0.2, TRUE);	
+		}
+		temp = nextent(temp);	
+	}
+	
+	//local entity head = findradius(self.origin, 1000);
+	//local entity last = self;
+	//while (head)
+	//{
+	//	draw_line(last.origin, head.origin, 192, .2, TRUE);
+	//	last = head;
+	//	head = head.chain;
+		
+	//}
+
+}
 void() reticuleOver =
 {
 	makevectors (self.v_angle);
