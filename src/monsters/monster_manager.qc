@@ -147,7 +147,7 @@ void() cullMonsters =
 		
 		if(removeEnt != world)
 		{
-			bprint("removing a monster too far away!\n");
+			// bprint("removing a monster too far away!\n");
 			remove(removeEnt);
 			removeLivingMonsterFromManager(removeEnt);
 
@@ -161,9 +161,9 @@ void() cullMonsters =
 void() managerThink=
 {
 	cullMonsters();
-	bprint("cur monster h: ");
-	bprint(ftos(self.health));
-	bprint("\n");
+	// bprint("cur monster h: ");
+	// bprint(ftos(self.health));
+	// bprint("\n");
 	monsterManager.nextthink = time + 0.1;	
 }
 
@@ -173,7 +173,7 @@ entity() makeMonsterManager=
 	monsterManager = spawn();
 	monsterManager.think = managerThink;
 	monsterManager.nextthink = time + 0.1;	
-	monsterManager.max_health = 5; // max enemies
+	monsterManager.max_health = 15; // max enemies
 	monsterManager.health = 0; //number of existing monsters - better to have a list?	
 	return monsterManager;
 }
@@ -251,7 +251,6 @@ void(entity player) processMonsterManagerForPlayer=
 			curNode.nextthink = time + 2;
 		
 		}
-	
 		curNode = curNode.nextSpawner;
 	}
 }

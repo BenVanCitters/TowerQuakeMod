@@ -11,8 +11,9 @@ void() newMonsterSpawn =
 {
 	local entity mgr = getMonsterManager();
 	//if there is something at the spawn don't do anything...
-	traceline(self.origin - '0 1 0', self.origin + '0 1 0', FALSE, self);
-	if(trace_ent == world && (mgr.health < mgr.max_health) )
+	// - the spawner i a collider and if there was a touch in the last .2 seconds, it must be occupied
+	local float noTouch = time - self.attack_finished > 0.2;
+	if(noTouch && (mgr.health < mgr.max_health) )
 	{
 		local entity new_enemy = spawn();
 		//copy origin and angles in from the map entity settings
@@ -27,6 +28,7 @@ void() newMonsterSpawn =
 
 		self.monster_respawn(new_enemy);
 
+		setsize (self, VEC_HULL2_MIN, VEC_HULL2_MAX);
 		addLivingMonsterToManager(new_enemy);
 		//instead of just calling 'walkmonsterstart' we use 'think' to properly set self
 		new_enemy.think = self.monster_init_ai;
@@ -36,7 +38,13 @@ void() newMonsterSpawn =
 	//self.think = newMonsterSpawn;
 	// self.nextthink = time + self.respawn_wait;
 	//manager sets the nextthink... 
-}
+};
+
+void() spawner_touch =
+{
+	self.attack_finished = time;
+	// bprint("collider touched!\n");
+};
 
 void() kickoffMonster =
 {
@@ -49,9 +57,12 @@ void() kickoffMonster =
 	self.monster_precaches();
 	
 	local entity monster_spawner = spawn();
-	
+	monster_spawner.attack_finished = -1;
 	monster_spawner.classname = "monster_spawner";
-	
+	monster_spawner.solid = SOLID_TRIGGER;	
+	monster_spawner.movetype = MOVETYPE_NONE;
+	monster_spawner.owner = self;
+	monster_spawner.touch = spawner_touch;
 	//assume these are set prior...
 	monster_spawner.respawn_wait = self.respawn_wait;
 	monster_spawner.origin = self.origin;
