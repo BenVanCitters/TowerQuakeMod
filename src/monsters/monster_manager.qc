@@ -122,9 +122,46 @@ float() getCurrentCountOfMonsters =
 	return 0;
 }
 
+void() cullMonsters = 
+{
+	local entity temp = self;
+	local float t =0;
+	local entity removeEnt = world;
+	temp = nextent(temp);
+	while(temp != self)
+	{		
+		if(temp.flags & FL_MONSTER && !(temp.flags & FL_TOWER))
+		{
+			t =t +1;
+			if(temp.minPlayerDistance > 2000 ||  // if the player is really far away
+				 (!temp.canSeePlayer && temp.minPlayerDistance > 1200) || //if you can't see the player and are 1200 units away
+				temp.lastSawPlayerTime < time - 12) //if you haven't seen the player for 20 seconds
+			{ removeEnt = temp; }
+			
+			//reset frame
+			temp.minPlayerDistance = 9999999;
+			temp.canSeePlayer = FALSE;
+		}
+
+		temp = nextent(temp);	
+		
+		if(removeEnt != world)
+		{
+			bprint("removing a monster too far away!\n");
+			remove(removeEnt);
+			removeLivingMonsterFromManager(removeEnt);
+
+			removeEnt = world;
+		}
+	}
+	
+
+}
+
 void() managerThink=
 {
-	bprint("cur monster count: ");
+	cullMonsters();
+	bprint("cur monster h: ");
 	bprint(ftos(self.health));
 	bprint("\n");
 	monsterManager.nextthink = time + 0.1;	
@@ -148,9 +185,7 @@ entity() getMonsterManager =
 		monsterManager = makeMonsterManager();		
 	}
 	else
-	{
-		
-	// bprint("NOT Spawning the manager!\n");
+	{ // bprint("NOT Spawning the manager!\n");
 	}
 	return monsterManager;	
 };
@@ -171,11 +206,39 @@ void(entity monster) removeLivingMonsterFromManager=
 {
 	local entity mgr = getMonsterManager();
 	mgr.health = mgr.health - 1;
-}
+};
 
+void(entity player) calcMonsterForPlayer
+{
+	local entity temp = player;
+
+	temp = nextent(temp);
+	while(temp != self)
+	{		
+		if(temp.flags & FL_MONSTER && !(temp.flags & FL_TOWER))
+		{
+			//set min dist
+			local float dToPlayer = vlen( temp.origin - player.origin );
+			if(dToPlayer < temp.minPlayerDistance)
+			{
+				temp.minPlayerDistance = dToPlayer;
+			}
+
+			// see can see player
+			traceline(player.origin + player.view_ofs, 
+				      temp.origin + temp.view_ofs, TRUE, player);
+			temp.canSeePlayer = temp.canSeePlayer | (trace_fraction >= 1);
+
+			if(temp.canSeePlayer)
+				temp.lastSawPlayerTime = time;
+		}
+		temp = nextent(temp);	
+	}
+
+}
 void(entity player) processMonsterManagerForPlayer=
 {
-	
+	calcMonsterForPlayer(player);
 	local entity mgr = getMonsterManager();
 	nearestSpawns(player);
 	// for each

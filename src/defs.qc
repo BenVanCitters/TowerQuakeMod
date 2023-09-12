@@ -571,6 +571,9 @@ float WORLDTYPE_BASE = 2;
 .float		isDroppingTower;
 .entity		nextSpawner; //like .chain but for finding nearby spawners
 .float		distToPlayer;  // float for holding disatnce to the last player/bot
+.float      minPlayerDistance; //min dist to a player
+.float		canSeePlayer; //whether the monster has direct line to a player
+.float		lastSawPlayerTime; //last time the monster saw the player - if too big cull...
 
 .void(entity myEntity)		monster_respawn;
 .void()		monster_precaches;

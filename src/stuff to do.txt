@@ -18,8 +18,8 @@ test in mp
 build a level
 build tutorial
 tunable towers (random strength, random upgrade level, speed)
-graphical differentiation for monsters, towers, enemy towers
+graphical differentiation for monsters, towers, enemy towers, other players
 maybe upgrading a tower should pause the tower briefly - more of a penalty
 maybe towers shouldn't be ready right away - slow down how fast they can be made
 reverse gib explosions?
-monster mgr - prevent too many monsters, 
+prevent too many monsters, 

@@ -19,6 +19,12 @@ void() newMonsterSpawn =
 		new_enemy.owner = self;
 		new_enemy.origin = self.origin;
 		new_enemy.angles = self.angles;	
+		
+		//make sure we don't accidentally auto cull via monster mgr
+		new_enemy.minPlayerDistance = 9999999;
+		new_enemy.canSeePlayer = FALSE;
+		new_enemy.lastSawPlayerTime = time;
+
 		self.monster_respawn(new_enemy);
 
 		addLivingMonsterToManager(new_enemy);
@@ -74,7 +80,8 @@ void() removeMonsterThink=
 //called on last death frame..
 void()	deathRemove = 
 { 
-	removeLivingMonsterFromManager(self);
+	if (!(self.flags & FL_TOWER))
+		removeLivingMonsterFromManager(self);
 	self.think = removeMonsterThink; 
 	self.nextthink = time + 10 + random()*10;
 };
