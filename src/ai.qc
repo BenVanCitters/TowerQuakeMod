@@ -550,14 +550,24 @@ float() FindTarget =
 	return TRUE;
 };
 
+//self is a turret/tower
+float() hasValidEnemy=
+{
+	local float hasEnemy = self.enemy != world;
+	local float enemyAlive = self.enemy.health > 0;
+	local float enemyIsVisible = visible (self.enemy);
+	return FALSE;
+}
 
-
+//find something for the tower to attack...
 void() FindTowerTarget =
 {
 	local float	r;
 	local	entity	head;
 	
 	droptofloor();	
+	
+	local float hasCurValidTarget = hasValidEnemy();
 	
 	head = findradius(self.origin, 999999999);
 	//bprint("firetowertarg\n");

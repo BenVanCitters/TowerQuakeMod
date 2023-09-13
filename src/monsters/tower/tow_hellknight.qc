@@ -398,14 +398,14 @@ void() tow_hknight_melee =
 };
 
 /*QUAKED monster_hell_knight (1 0 0) (-16 -16 -24) (16 16 40) Ambush*/
-void(vector org, entity tow_owner) monster_tow_hell_knight =
-{
+void(entity oldTower) monster_tow_hell_knight =
+{	
+	local vector org = oldTower.origin;
+	local entity tow_owner = oldTower.tower_owner;
+
 	local entity tower = spawn();
 	
-	tower.angles = vectoangles(aim(self, 1000));
-	tower.angles_x =0;
-	tower.angles_y =0;
-	
+	tower.angles = oldTower.angles;
 	
 	setorigin (tower, org + '0 0 50');
 	

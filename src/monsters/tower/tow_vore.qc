@@ -230,14 +230,14 @@ void() TowShalMissileTouch =
 
 /*QUAKED monster_shalrath (1 0 0) (-32 -32 -24) (32 32 48) Ambush
 */
-void(vector org, entity tow_owner) monster_tow_shalrath =
-{
+void(entity oldTower) monster_tow_shalrath =
+{	
+	local vector org = oldTower.origin;
+	local entity tow_owner = oldTower.tower_owner;
+
 	local entity tower = spawn();
 	
-	tower.angles = vectoangles(aim(self, 1000));
-	tower.angles_x =0;
-	tower.angles_y =0;
-	
+	tower.angles = oldTower.angles;
 	
 	setorigin (tower, org + '0 0 50');
 	

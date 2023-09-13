@@ -3,14 +3,16 @@ bugs
 graphic health upgrade status - isn't always aligned - doesn't always show everything
 axe should upgrade if close, build tower if held and pointing at ground, attack if hit enemy
 make sure melee attacks work for ogre, shambler, hellknight
-prevent monsters from spawning when far away
 fish don't swim to player before sight
 vores can't seem to handle two grunts...
 prevent monsters attacking each other
 placement indicator never goes away if button held at death
+monsters after the grunt don't face correct direction
+player's towers should not hurt each other
 
 more features
 ===============
+remove items via a compile flag so if I decide I want to use them later I can
 monsters run rather than walk to player	
 allow gradual tuning of respawns - faster stronger etx
 quad dmg affects towers
@@ -22,4 +24,4 @@ graphical differentiation for monsters, towers, enemy towers, other players
 maybe upgrading a tower should pause the tower briefly - more of a penalty
 maybe towers shouldn't be ready right away - slow down how fast they can be made
 reverse gib explosions?
-prevent too many monsters, 
+prevent too many towers

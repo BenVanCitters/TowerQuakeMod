@@ -140,11 +140,11 @@ void() drawTowerUnderReticule=
 
 //should either add health or bump up the tower
 //soldier -> enforcer -> ogre -> hellknight -> vore -> shambler 
-void(vector org, entity tow_owner) monster_tow_enforcer;
-void(vector org, entity tow_owner) monster_tow_ogre;
-void(vector org, entity tow_owner) monster_tow_hell_knight;
-void(vector org, entity tow_owner) monster_tow_shalrath;
-void(vector org, entity tow_owner) monster_tow_shambler;
+void(entity oldTower) monster_tow_enforcer;
+void(entity oldTower) monster_tow_ogre;
+void(entity oldTower) monster_tow_hell_knight;
+void(entity oldTower) monster_tow_shalrath;
+void(entity oldTower) monster_tow_shambler;
 void(vector org, entity tow_owner) monster_tow_army;
 
 void(vector) spawn_tfog;
@@ -152,23 +152,23 @@ void(entity tower) upgradeTower =
 {
 	if(tower.tower_upgrade_level == 1 ) //"grunt -> enforcer"
 	{
-		monster_tow_enforcer(tower.origin, tower.tower_owner);		
+		monster_tow_enforcer(tower);		
 	}
 	else if(tower.tower_upgrade_level == 2 ) //"enforcer -> ogre"
 	{
-		monster_tow_ogre(tower.origin, tower.tower_owner);		
+		monster_tow_ogre(tower);		
 	}
 	else if(tower.tower_upgrade_level == 3 ) //"ogre -> hellknight"
 	{
-		monster_tow_hell_knight(tower.origin , tower.tower_owner);		
+		monster_tow_hell_knight(tower);		
 	}
 	else if(tower.tower_upgrade_level == 4 ) //"hellknight -> vore"
 	{
-		monster_tow_shalrath(tower.origin, tower.tower_owner);		
+		monster_tow_shalrath(tower);		
 	}
 	else if(tower.tower_upgrade_level == 5 ) //"vore -> shambler"
 	{
-		monster_tow_shambler(tower.origin, tower.tower_owner);		
+		monster_tow_shambler(tower);		
 	}
 	spawn_tfog(tower.origin);
 	T_Damage(tower, tower.tower_owner, tower.tower_owner, 10000);
