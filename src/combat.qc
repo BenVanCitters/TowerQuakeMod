@@ -168,7 +168,7 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 		return;
 
 	//bail if tower can't hurt
-	if((attacker.flags & FL_TOWER) && !canTowerDamage())
+	if((attacker.flags & FL_TOWER) && !canTowerDamage(attacker, targ))
 		return;
 
 	// mal: in Coop, don't let bots hurt human teammates - that would be REALLY annoying...
