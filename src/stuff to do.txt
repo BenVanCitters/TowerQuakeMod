@@ -5,9 +5,9 @@ axe should upgrade if close, build tower if held and pointing at ground, attack 
 make sure melee attacks work for ogre, shambler, hellknight
 fish don't swim to player before sight
 vores can't seem to handle two grunts...
-prevent monsters attacking each other
 placement indicator never goes away if button held at death
-dont show health/upgrades for non-towers
+towers constantly re-engage enemies - roar!... roar!... roar!...
+
 more features
 ===============
 print msgs for creating all towers

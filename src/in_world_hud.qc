@@ -162,7 +162,7 @@ void() reticuleOver =
 	traceline (source, source + v_forward*2000, FALSE, self);
 	//draw_line(source, source + v_forward*2000, 246, 1, TRUE);
 
-	if(trace_ent.takedamage)// && trace_ent.health > 0 && trace_ent.flags & FL_MONSTER)
+	if(trace_ent.takedamage && (trace_ent.flags & FL_TOWER))// && trace_ent.health > 0 && trace_ent.flags & FL_MONSTER)
 	{
 		
 		trace_ent.statusShowTime = time + 1;

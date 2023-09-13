@@ -94,6 +94,8 @@ void() tow_ogreGrenadeTouch =
 
 	if (other.takedamage == DAMAGE_AIM)
 	{
+		if (other.netname ==  "$qc_zombie")
+			T_Damage (other, self, self, 1010);	
 		tow_ogreGrenadeExplode();
 		return;
 	}
