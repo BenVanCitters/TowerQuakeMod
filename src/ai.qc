@@ -242,14 +242,15 @@ void() HuntTarget =
 		//
 		//bprint(self.tower_owner.classname);
 		//bprint("]\n");
+		self.nextthink = time + 0.1 + random()*0.2;
 		self.think = self.th_missile;
 	}
 	else
 	{
 		self.think = self.th_run;
+		self.nextthink = time + 0.1;
 	}
 	self.ideal_yaw = vectoyaw(self.enemy.origin - self.origin);
-	self.nextthink = time + 0.1;
 	SUB_AttackFinished (1);	// wait a while before first attack
 };
 
@@ -282,7 +283,6 @@ void() FoundTarget =
 	}
 	
 	self.show_hostile = time + 1;		// wake up other monsters
-
 	SightSound ();
 	HuntTarget ();
 };
@@ -556,19 +556,23 @@ float() hasValidEnemy=
 	local float hasEnemy = self.enemy != world;
 	local float enemyAlive = self.enemy.health > 0;
 	local float enemyIsVisible = visible (self.enemy);
-	return FALSE;
+	return hasEnemy && enemyAlive && enemyIsVisible;
 }
 
 //find something for the tower to attack...
 void() FindTowerTarget =
 {
 	local float	r;
+	local	entity	prev_target;
 	local	entity	head;
 	
 	droptofloor();	
 	
-	local float hasCurValidTarget = hasValidEnemy();
-	
+	local float hasPrevValidTarget = hasValidEnemy();
+	if(hasPrevValidTarget)
+	{
+		prev_target = self.enemy;
+	}
 	head = findradius(self.origin, 999999999);
 	//bprint("firetowertarg\n");
 	
@@ -606,8 +610,10 @@ void() FindTowerTarget =
 					self.enemy = head;	
 					//bprint("setting enemy to ");
 					//bprint(head.classname);
-					//bprint("\n");			
-					FoundTarget ();			
+					//bprint("\n");		
+					if(prev_target != self.enemy)
+						SightSound ();
+					HuntTarget ();	
 					return;		
 				}	
 				
