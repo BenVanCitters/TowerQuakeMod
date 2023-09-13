@@ -107,11 +107,11 @@ void(entity targ, entity attacker) Killed =
 	{
 		killed_monsters = killed_monsters + 1;
 		WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
-		if( attacker.tower_owner.classname == "player")
+		if( attacker.tower_owner.classname == "player" )
 		{
 			attacker.tower_owner.frags = attacker.tower_owner.frags + 1;
 		}
-		if (attacker.classname == "player")
+		if (attacker.classname == "player" && targ.tower_owner != attacker)
 		{
 			attacker.frags = attacker.frags + 1;
 		}
@@ -134,6 +134,15 @@ void(entity targ, entity attacker) Killed =
 	self = oself;
 };
 
+// not both towers
+// both towers; diff owners
+// both towers same owner
+float(entity tower, entity targ ) canTowerDamage=
+{
+	local float areBothTowers = (tower.flags & FL_TOWER) && (targ.flags & FL_TOWER);
+	local float haveSameOwner = tower.tower_owner == targ.tower_owner;
+	return !(areBothTowers && haveSameOwner);
+}
 
 /*
 ============
@@ -141,6 +150,11 @@ T_Damage
 
 The damage is coming from inflictor, but get mad at attacker
 This should be the only function that ever reduces health.
+
+targ >> what should ultimately have health reduced
+inflictor >> the damage delegate entity - ie the rocket, laser, spike, or grenade
+attacker >> the entity responsible for damage
+
 ============
 */
 void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
@@ -153,6 +167,9 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 	if (!targ.takedamage)
 		return;
 
+	//bail if tower can't hurt
+	if((attacker.flags & FL_TOWER) && !canTowerDamage())
+		return;
 
 	// mal: in Coop, don't let bots hurt human teammates - that would be REALLY annoying...
 	if ( coop && targ != attacker && targ.classname == "player" && attacker.classname == "player" ) {

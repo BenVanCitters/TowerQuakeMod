@@ -171,7 +171,7 @@ void(entity tower) upgradeTower =
 		monster_tow_shambler(tower.origin, tower.tower_owner);		
 	}
 	spawn_tfog(tower.origin);
-	T_Damage(tower, tower, tower, 10000);
+	T_Damage(tower, tower.tower_owner, tower.tower_owner, 10000);
 }
 
 void(entity tower) tower_checkUpgrade = 
