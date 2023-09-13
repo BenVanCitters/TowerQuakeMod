@@ -74,6 +74,7 @@ void(entity listOwner) printSpawnList =
 
 }
 
+//adds spawns to a player via the 'nextspawner' field
 void( entity playerEnt  ) nearestSpawns=
 {
 	playerEnt.nextSpawner = world;
@@ -236,14 +237,29 @@ void(entity player) calcMonsterForPlayer
 	}
 
 }
+
+void(entity player) setNearestPlayerForSpawns=
+{
+	local entity curNode = player.nextSpawner;
+	while( curNode != world )
+	{
+		curNode.aiment = player;
+		curNode = curNode.nextSpawner;
+	}
+};
+
 void(entity player) processMonsterManagerForPlayer=
 {
 	calcMonsterForPlayer(player);
 	local entity mgr = getMonsterManager();
+	
+	//get list
 	nearestSpawns(player);
-	// for each
-	local entity curNode = player.nextSpawner;
+	
+	//set who to move towards after spawning 
+	setNearestPlayerForSpawns(player);
 	//walk the list
+	local entity curNode = player.nextSpawner;
 	while( curNode != world )
 	{
 		if(curNode.nextthink < time && (mgr.health < mgr.max_health) )

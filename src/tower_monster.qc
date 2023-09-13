@@ -20,7 +20,8 @@ void() newMonsterSpawn =
 		new_enemy.owner = self;
 		new_enemy.origin = self.origin;
 		new_enemy.angles = self.angles;	
-		
+		new_enemy.aiment = self.aiment;
+
 		//make sure we don't accidentally auto cull via monster mgr
 		new_enemy.minPlayerDistance = 9999999;
 		new_enemy.canSeePlayer = FALSE;

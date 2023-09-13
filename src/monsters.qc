@@ -134,7 +134,7 @@ void() walkmonster_start_go =
 
 	else
 	{
-		local entity localclient = find(world, classname, "player");// checkclient ();
+		local entity localclient = self.aiment;//find(world, classname, "player");// checkclient ();
 		
 		//bprint("I'm a ");
 		//bprint(self.classname);
@@ -259,12 +259,32 @@ void() flymonster_start_go =
 			self.pausetime = 99999999;
 			self.th_stand ();
 	}
-
 	else
 	{
-		self.pausetime = 99999999;
-		self.th_stand ();
+		local entity localclient = self.aiment;
+		
+		//bprint("I'm a ");
+		//bprint(self.classname);
+		//bprint(" and my check client was a ");
+		//bprint(localclient.classname);
+		//bprint(" der der der\n");
+		if(localclient.classname == "player")
+		{
+			//bprint("walking to 'client'\n");
+			self.goalentity = self.movetarget = localclient;
+			self.ideal_yaw = vectoyaw(self.goalentity.origin - self.origin);
+			self.th_walk ();
+
+		}
+		else
+		{
+			self.pausetime = 99999999;
+			self.th_stand ();
+		}
 	}
+
+	// spread think times so they don't all happen at same time
+	self.nextthink = self.nextthink + random()*0.5;
 };
 
 void() flymonster_start =
