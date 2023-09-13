@@ -7,12 +7,10 @@ fish don't swim to player before sight
 vores can't seem to handle two grunts...
 prevent monsters attacking each other
 placement indicator never goes away if button held at death
-monsters after the grunt don't face correct direction
-player's towers should not hurt each other
-
+dont show health/upgrades for non-towers
 more features
 ===============
-remove items via a compile flag so if I decide I want to use them later I can
+print msgs for creating all towers
 monsters run rather than walk to player	
 allow gradual tuning of respawns - faster stronger etx
 quad dmg affects towers

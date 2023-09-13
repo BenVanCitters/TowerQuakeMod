@@ -16,6 +16,7 @@
 
     See file, 'COPYING', for details.
 */
+float dont_spawn_items = 1;
 
 void() W_SetCurrentAmmo;
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
@@ -568,6 +569,11 @@ QUAKED weapon_supershotgun (0 .5 .8) (-16 -16 0) (16 16 32)
 */
 void() weapon_supershotgun =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	precache_model ("progs/g_shot.mdl");
 	setmodel (self, "progs/g_shot.mdl");
 	self.weapon = IT_SUPER_SHOTGUN;
@@ -582,6 +588,11 @@ void() weapon_supershotgun =
 
 void() weapon_nailgun =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	precache_model ("progs/g_nail.mdl");
 	setmodel (self, "progs/g_nail.mdl");
 	self.weapon = IT_NAILGUN;
@@ -596,6 +607,11 @@ void() weapon_nailgun =
 
 void() weapon_supernailgun =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	precache_model ("progs/g_nail2.mdl");
 	setmodel (self, "progs/g_nail2.mdl");
 	self.weapon = IT_SUPER_NAILGUN;
@@ -610,6 +626,11 @@ void() weapon_supernailgun =
 
 void() weapon_grenadelauncher =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	precache_model ("progs/g_rock.mdl");
 	setmodel (self, "progs/g_rock.mdl");
 	self.weapon = IT_GRENADE_LAUNCHER;
@@ -624,6 +645,11 @@ void() weapon_grenadelauncher =
 
 void() weapon_rocketlauncher =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	precache_model ("progs/g_rock2.mdl");
 	setmodel (self, "progs/g_rock2.mdl");
 	self.weapon = IT_ROCKET_LAUNCHER;
@@ -639,6 +665,11 @@ void() weapon_rocketlauncher =
 
 void() weapon_lightning =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	precache_model ("progs/g_light.mdl");
 	setmodel (self, "progs/g_light.mdl");
 	self.weapon = IT_LIGHTNING;
@@ -759,6 +790,11 @@ QUAKED item_shells (0 .5 .8) (0 0 0) (32 32 32) big
 */
 void() item_shells =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	self.touch = ammo_touch;
 
 	if (self.spawnflags & WEAPON_BIG2)
@@ -785,6 +821,11 @@ QUAKED item_spikes (0 .5 .8) (0 0 0) (32 32 32) big
 */
 void() item_spikes =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	self.touch = ammo_touch;
 
 	if (self.spawnflags & WEAPON_BIG2)
@@ -811,6 +852,11 @@ QUAKED item_rockets (0 .5 .8) (0 0 0) (32 32 32) big
 */
 void() item_rockets =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	self.touch = ammo_touch;
 
 	if (self.spawnflags & WEAPON_BIG2)
@@ -837,6 +883,11 @@ QUAKED item_cells (0 .5 .8) (0 0 0) (32 32 32) big
 */
 void() item_cells =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	self.touch = ammo_touch;
 
 	if (self.spawnflags & WEAPON_BIG2)
@@ -870,6 +921,11 @@ float WEAPON_SPIKES = 4;
 float WEAPON_BIG = 8;
 void() item_weapon =
 {
+	if(dont_spawn_items)
+	{
+		remove(self);
+		return;
+	}
 	self.touch = ammo_touch;
 
 	if (self.spawnflags & WEAPON_SHOTGUN)
