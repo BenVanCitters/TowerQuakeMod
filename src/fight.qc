@@ -301,7 +301,57 @@ float() SoldierCheckAttack =
 	return FALSE;
 };
 //=============================================================================
+float(entity ent) canMelee=
+{
+	return ent.netname == "$qc_ogre" ||
+			ent.netname == "$qc_shambler" ||
+			ent.netname == "$qc_death_knight";
 
+};
+float() towerCheckAttack=
+{
+	local vector	spot1, spot2;	
+	local entity	targ;
+	targ = self.enemy;
+	self.goalentity = self.enemy;
+	local float tenemy_yaw = vectoyaw(self.enemy.origin - self.origin);
+	
+
+	if (canMelee(self) && range(self.enemy) == RANGE_MELEE)
+	{
+		if (CanDamage (self.enemy, self))
+		{
+			self.ideal_yaw = tenemy_yaw;
+			ChangeYaw();
+
+			//don't care if facing right direction for towers
+			self.th_melee();
+			return TRUE;
+		}
+	}
+
+
+	// see if any entities are in the way of the shot
+	spot1 = self.origin + self.view_ofs;
+	spot2 = targ.origin + targ.view_ofs;
+
+	traceline(spot1, spot2, FALSE, self);
+	if (trace_ent != targ)
+	{
+		self.enemy = world;
+		return FALSE;	// don't have a clear shot
+	}
+
+
+	self.ideal_yaw = enemy_yaw;
+	ChangeYaw();
+	//normal alg from AI :: HuntTarget
+	self.nextthink = time + 0.1 + random()*0.2;
+	self.think = self.th_missile;
+	self.ideal_yaw = vectoyaw(self.enemy.origin - self.origin);
+
+	return TRUE;
+}
 /*
 ===========
 ShamCheckAttack

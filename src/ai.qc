@@ -237,19 +237,11 @@ void() HuntTarget =
 {
 	self.goalentity = self.enemy;
 	
-	if(self.tower_owner.classname == "player" )
-	{
-		//
-		//bprint(self.tower_owner.classname);
-		//bprint("]\n");
-		self.nextthink = time + 0.1 + random()*0.2;
-		self.think = self.th_missile;
-	}
-	else
-	{
+	if(self.tower_owner.classname == "player" ) //if self is a tower
+
 		self.think = self.th_run;
 		self.nextthink = time + 0.1;
-	}
+	
 	self.ideal_yaw = vectoyaw(self.enemy.origin - self.origin);
 	SUB_AttackFinished (1);	// wait a while before first attack
 };
@@ -558,7 +550,7 @@ float() hasValidEnemy=
 	local float enemyIsVisible = visible (self.enemy);
 	return hasEnemy && enemyAlive && enemyIsVisible;
 }
-
+float() CheckAnyAttack;
 //find something for the tower to attack...
 void() FindTowerTarget =
 {
@@ -608,13 +600,23 @@ void() FindTowerTarget =
 					// got one
 					//
 					self.enemy = head;	
-					//bprint("setting enemy to ");
-					//bprint(head.classname);
-					//bprint("\n");		
-					if(prev_target != self.enemy)
-						SightSound ();
-					HuntTarget ();	
-					return;		
+					
+					// CheckAnyAttack ();
+					if(towerCheckAttack())
+					{
+						bprint("setting enemy to ");
+						bprint(head.classname);
+						bprint("\n");		
+						if(prev_target != head)
+							SightSound ();
+							return;		
+					}
+					else
+					{
+						self.enemy = head;
+					}
+					// HuntTarget ();	
+					// return;		
 				}	
 				
 			}

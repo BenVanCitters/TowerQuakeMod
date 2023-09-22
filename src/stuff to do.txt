@@ -6,11 +6,11 @@ make sure melee attacks work for ogre, shambler, hellknight
 fish don't swim to player before sight
 vores can't seem to handle two grunts...
 placement indicator never goes away if button held at death
-towers constantly re-engage enemies - roar!... roar!... roar!...
+
 
 more features
 ===============
-print msgs for creating all towers
+print msgs for creating all towers`
 monsters run rather than walk to player	
 allow gradual tuning of respawns - faster stronger etx
 quad dmg affects towers
@@ -23,3 +23,8 @@ maybe upgrading a tower should pause the tower briefly - more of a penalty
 maybe towers shouldn't be ready right away - slow down how fast they can be made
 reverse gib explosions?
 prevent too many towers
+healing dog??
+make placing towers while running feel good...
+
+input design...
+quick click - upgrade, long click pick up to move

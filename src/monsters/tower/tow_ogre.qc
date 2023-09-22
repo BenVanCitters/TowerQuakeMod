@@ -216,6 +216,36 @@ void() tow_ogre_run6	=[	$run6,		tow_ogre_run7	] {};
 void() tow_ogre_run7	=[	$run7,		tow_ogre_run8	] {};
 void() tow_ogre_run8	=[	$run8,		tow_ogre_stand1	] {};
 
+
+void(float side) tow_chainsaw =
+{
+local vector	delta;
+local float 	ldmg;
+
+	if (!self.enemy)
+		return;
+
+	if (!CanDamage (self.enemy, self))
+		return;
+
+	delta = self.enemy.origin - self.origin;
+
+	if (vlen(delta) > 100)
+		return;
+		
+	ldmg = (random() + random() + random()) * 4;
+	T_Damage (self.enemy, self, self, ldmg);
+	
+	if (side)
+	{
+		makevectorsfixed(self.angles);
+		if (side == 1)
+			SpawnMeatSpray (self.origin + v_forward*16, crandom() * 100 * v_right);
+		else
+			SpawnMeatSpray (self.origin + v_forward*16, side * v_right);
+	}
+};
+
 void() tow_ogre_swing1	=[	$swing1,		tow_ogre_swing2	] {
 sound (self, CHAN_WEAPON, "ogre/ogsawatk.wav", 1, ATTN_NORM);};
 void() tow_ogre_swing2	=[	$swing2,		tow_ogre_swing3	] {};
@@ -223,37 +253,37 @@ void() tow_ogre_swing3	=[	$swing3,		tow_ogre_swing4	] {};
 void() tow_ogre_swing4	=[	$swing4,		tow_ogre_swing5	] {};
 void() tow_ogre_swing5	=[	$swing5,		tow_ogre_swing6	] {
 
-	chainsaw(0);
+	tow_chainsaw(0);
 	self.angles_y = self.angles_y + random() * 25;
 };
 
 void() tow_ogre_swing6	=[	$swing6,		tow_ogre_swing7	] {
-	chainsaw(200);
+	tow_chainsaw(200);
 	self.angles_y = self.angles_y + random()* 25;
 };
 
 void() tow_ogre_swing7	=[	$swing7,		tow_ogre_swing8	] {
-	chainsaw(0);
+	tow_chainsaw(0);
 	self.angles_y = self.angles_y + random() * 25;
 };
 
 void() tow_ogre_swing8	=[	$swing8,		tow_ogre_swing9	] {
-	chainsaw(0);
+	tow_chainsaw(0);
 	self.angles_y = self.angles_y + random() * 25;
 };
 
 void() tow_ogre_swing9	=[	$swing9,		tow_ogre_swing10 ] {
-	chainsaw(0);
+	tow_chainsaw(0);
 	self.angles_y = self.angles_y + random() * 25;
 };
 
 void() tow_ogre_swing10	=[	$swing10,		tow_ogre_swing11 ] {
-	chainsaw(-200);
+	tow_chainsaw(-200);
 	self.angles_y = self.angles_y + random() * 25;
 };
 
 void() tow_ogre_swing11	=[	$swing11,		tow_ogre_swing12 ] {
-	chainsaw(0);
+	tow_chainsaw(0);
 	self.angles_y = self.angles_y + random() * 25;
 };
 
@@ -268,14 +298,14 @@ void() tow_ogre_smash2	=[	$smash2,		tow_ogre_smash3	] {};
 void() tow_ogre_smash3	=[	$smash3,		tow_ogre_smash4	] {};
 void() tow_ogre_smash4	=[	$smash4,		tow_ogre_smash5	] {};
 void() tow_ogre_smash5	=[	$smash5,		tow_ogre_smash6	] {};
-void() tow_ogre_smash6	=[	$smash6,		tow_ogre_smash7	] { chainsaw(0);};
-void() tow_ogre_smash7	=[	$smash7,		tow_ogre_smash8	] { chainsaw(0);};
-void() tow_ogre_smash8	=[	$smash8,		tow_ogre_smash9	] { chainsaw(0);};
-void() tow_ogre_smash9	=[	$smash9,		tow_ogre_smash10 ] { chainsaw(0);};
-void() tow_ogre_smash10	=[	$smash10,		tow_ogre_smash11 ] {chainsaw(1);};
+void() tow_ogre_smash6	=[	$smash6,		tow_ogre_smash7	] { tow_chainsaw(0);};
+void() tow_ogre_smash7	=[	$smash7,		tow_ogre_smash8	] { tow_chainsaw(0);};
+void() tow_ogre_smash8	=[	$smash8,		tow_ogre_smash9	] { tow_chainsaw(0);};
+void() tow_ogre_smash9	=[	$smash9,		tow_ogre_smash10 ] { tow_chainsaw(0);};
+void() tow_ogre_smash10	=[	$smash10,		tow_ogre_smash11 ] {tow_chainsaw(1);};
 void() tow_ogre_smash11	=[	$smash11,		tow_ogre_smash12 ] {
 	 
-	chainsaw(0);
+	tow_chainsaw(0);
 	self.nextthink = self.nextthink + random() * 0.2;
 };	// slight variation
 
